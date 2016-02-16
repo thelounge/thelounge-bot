@@ -45,24 +45,27 @@ bot.addListener("join", function(channel, who) {
 bot.addListener("message", function(from, to, text) {
 	var splitMessage = text.split(" ");
 	var message = "";
-	log(actions.MSG, text);
+	log(actions.MSG, "(" + to + ")" + text);
 
     //It's a command!
     if (splitMessage[0].startsWith(config.commandPrefix)) {
     	log(actions.INFO, "Command sent");
         //!karma command
-        if (splitMessage[0] == "!karma" && splitMessage.length == 2) {
-        	userIndex = arrayObjectIndexOf(karmaUsers, splitMessage[1], "name");
-
-        	if (userInChannel(splitMessage[1])) {
-        		message = splitMessage[1] + "'s karma is " + getKarma(splitMessage[1]);
-        		log(actions.INFO, message)
-        		bot.say(to, message);
-        	} else {
-        		log(actions.ERROR, "No user named " + splitMessage[1] + " found");
-        	}
+        if (splitMessage[0] == "!karma") {
+			if (splitMessage.length === 2) {
+	        	userIndex = arrayObjectIndexOf(karmaUsers, splitMessage[1], "name");
+	        	if (userInChannel(splitMessage[1])) {
+	        		message = splitMessage[1] + "'s karma is " + getKarma(splitMessage[1]);
+	        	} else {
+	        		log(actions.ERROR, "No user named " + splitMessage[1] + " found");
+	        	}
+	        } else {
+	        	message = "Your karma is " + getKarma(from);
+	        }
+	        	log(actions.INFO, message)
+	        	bot.say(to, message);	        
             //!gh issue command
-        } else if (splitMessage[0] == "!gh") {
+        } else if (splitMessage[0] === "!gh") {
             //just !gh
             if (splitMessage.length === 1) {
             	message = format("https://github.com/%s/%s", config.githubUser, config.githubRepo);
@@ -138,7 +141,7 @@ var incrementKarma = function(user) {
 	if (karmaUsers) {
 		if (karmaUsers.length >= 1) {
 			userIndex = arrayObjectIndexOf(karmaUsers, user, "name");
-			log(actions.INFO, "User index is ", userIndex);
+			log(actions.INFO, "User index is " + userIndex);
 		}
         //if the user exists, increment karma, otherwise add them
         if (userIndex > -1) {
@@ -166,7 +169,7 @@ var getKarma = function(user) {
 			log(actions.INFO, "User index is ", userIndex);
 		}
 		if (userIndex > -1) {
-			log(actions.INFO, "karmaUser[index]: ", karmaUsers[userIndex]);
+			log(actions.INFO, "karmaUser[index]: " + karmaUsers[userIndex]);
 			return karmaUsers[userIndex].karma;
 		} else {
 			return -1;
