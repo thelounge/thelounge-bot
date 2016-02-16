@@ -42,7 +42,7 @@ bot.addListener("names" + config.channels[0], function(nicks) {
 bot.addListener("join", function(channel, who) {
     log(actions.JOIN, who + " joined " + channel);
     if(who.indexOf("lounge-user") > -1) {
-    	bot.say(who, "Hey, " + who + " now that you've figured out how to use The Lounge, please change your nickname to something more personal using the /nick command so we know who you are :)");
+    	bot.say(who, "Hey, " + who + ", now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the /nick <new_nickname> command so we know who you are :)");
     }
 });
 
