@@ -1,5 +1,5 @@
 var config = {
-	channels: ["#thelounge"],
+	channels: ["#loungebot-test"],
 	server: "chat.freenode.net",
 	botName: "lounge-bot",
 	commandPrefix: "!",
