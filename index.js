@@ -140,7 +140,13 @@ bot.addListener("message", function(from, to, text) {
 /** Utils **/
 
 var log = function(action, message) {
-    console.log("[" + action.toUpperCase() + "]" + " " + message);
+	var message = "[" + action.toUpperCase() + "]" + " " + message;
+	console.log(message);
+	fs.open('log.txt', 'a', 666, function(e, id) {
+		fs.write(id, message + "\n", null, 'utf8', function(){
+			fs.close(id);
+		});
+	});
 }
 
 var userInChannel = function(user) {

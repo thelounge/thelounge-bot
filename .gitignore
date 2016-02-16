@@ -34,3 +34,4 @@ node_modules
 
 #lounge-specific
 karma.json
+log.txt
