@@ -49,7 +49,7 @@ bot.addListener("join", function(channel, who) {
 bot.addListener("message", function(from, to, text) {
     var splitMessage = text.split(" ");
     var message = "";
-    log(actions.MSG, "(" + to + ")" + text);
+    log(actions.MSG, "(" + to + ") " + from + ": " + text);
 
     //It's a command!
     if (splitMessage[0].startsWith(config.commandPrefix)) {
