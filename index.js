@@ -53,7 +53,7 @@ bot.addListener("message", function(from, to, text) {
                 //<number> or repo info
             } else if (splitMessage.length === 2) {
                 var arg = splitMessage[1];
-                //It's a number, so it's an issue
+                //It's a number, so it's an issue or a commit
                 if (stringIsPositiveInteger(arg)) {
                     log(actions.INFO, config.githubUser);
                     message = getIssueInformation({
@@ -61,23 +61,33 @@ bot.addListener("message", function(from, to, text) {
                         repo: config.githubRepo,
                         issue: arg
                     });
-                } else {
-                    var userRepo = parseUserRepoString(arg);
-                    mesage = format("https://www.github.com/%s/%s", userRepo.user, userRepo.repo);
-                }
-            } else if (splitMessage.length === 3) {
-                if (stringIsPositiveInteger(splitMessage[2])) {
-                    message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[3]));
-                } else {
-                    message = format("https://github.com/%s/%s", splitMessage[1], splitMessage[2]);
-                }
-            } else if (splitMessage.length === 4) {
+                //It's a commit
+            } else if(arg.length === 7) {
+                log(actions.INFO, "Commit recognized");
                 message = getIssueInformation({
-                    user: splitMessage[1],
-                    repo: splitMessage[2],
-                    issue: splitMessage[3]
+                    user: config.githubUser,
+                    repo: config.githubRepo,
+                    issue: arg
                 });
+            } else {
+                var userRepo = parseUserRepoString(arg);
+                mesage = format("https://www.github.com/%s/%s", userRepo.user, userRepo.repo);
             }
+        } else if (splitMessage.length === 3) {
+            if (stringIsPositiveInteger(splitMessage[2])) {
+                message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
+            } else if(splitMessage[2].length === 7) {
+                message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
+            } else {
+                message = format("https://github.com/%s/%s", splitMessage[1], splitMessage[2]);
+            }
+        } else if (splitMessage.length === 4) {
+            message = getIssueInformation({
+                user: splitMessage[1],
+                repo: splitMessage[2],
+                issue: splitMessage[3]
+            });
+        }
 
             //Google command
         } else if ((splitMessage[0] === "!g" || splitMessage[0] === "!google") && splitMessage.length > 1) {
@@ -94,15 +104,15 @@ bot.addListener("message", function(from, to, text) {
 
         log(actions.INFO, message);
         if(message !== "") {
-	        if (message.then) {
-	            message.then(function(m) {
-	                return bot.say(to, m);
-	            });
-	        } else {
-	            bot.say(to, message);
-	        }
-		}
-    }
+           if (message.then) {
+               message.then(function(m) {
+                   return bot.say(to, m);
+               });
+           } else {
+               bot.say(to, message);
+           }
+       }
+   }
 });
 
 /** Utils **/
@@ -140,39 +150,61 @@ var getIssueInformation = function(options) {
     var user = options.user;
     var repo = options.repo;
     var issueNumber = options.issue;
-    var result = format("https://api.github.com/repos/%s/%s/issues/%s", user, repo, issueNumber);
-    return fetch(result).then(function(res) {
-        log(actions.INFO, result);
-        return res.json();
-    }).then(function(res) {
-        if (res.message === "Not Found") {
-            return "Issue does not exist.";
-        }
+    console.log(issueNumber);
+    if(stringIsPositiveInteger(issueNumber.toString())) {
+        var result = format("https://api.github.com/repos/%s/%s/issues/%s", user, repo, issueNumber);
+        return fetch(result).then(function(res) {
+            log(actions.INFO, result);
+            return res.json();
+        }).then(function(res) {
+            if (res.message === "Not Found") {
+                return "Issue does not exist.";
+            }
 
-        var type = res.pull_request === undefined ? "Issue" : "PR";
-        var status = res.state;
-        var title = res.title;
-        var link = res.html_url;
+            var type = res.pull_request === undefined ? "Issue" : "PR";
+            var status = res.state;
+            var title = res.title;
+            var link = res.html_url;
 
-        if (type === "PR" && status === "closed") {
-            return fetch(res.pull_request.url).then(function(res) {
-                return res.json();
-            }).then(function(res) {
-                if (res.message === "Not Found") {
-                    return "PR does not exist.";
-                }
+            if (type === "PR" && status === "closed") {
+                return fetch(res.pull_request.url).then(function(res) {
+                    return res.json();
+                }).then(function(res) {
+                    if (res.message === "Not Found") {
+                        return "PR does not exist.";
+                    }
 
-                var type = "PR";
-                var status = res.merged_at === null ? "closed" : "merged";
-                var title = res.title;
-                var link = res.html_url;
+                    var type = "PR";
+                    var status = res.merged_at === null ? "closed" : "merged";
+                    var title = res.title;
+                    var link = res.html_url;
 
+                    return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
+                });
+            } else {
                 return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
-            });
-        } else {
-            return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
-        }
-    });
+            }
+        });
+    } else {
+        var result = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, issueNumber);
+        return fetch(result).then(function(res) {
+            log(actions.INFO, result);
+            return res.json();
+        }).then(function(res) {
+            if (res.message === "Not Found") {
+                return "Commit not found";
+            }
+
+            var type = "Commit";
+            var author = res.commit.author.name;
+            var message = res.commit.message;
+            var link = res.html_url;
+            var add = res.stats.additions;
+            var del = res.stats.deletions;
+
+            return format("[%s %s] - %s (add: %s, del: %s) - %s", type, author, message, add, del, link);
+        });
+    }
 }
 
 var withIssue = function(obj, issueNumber) {
