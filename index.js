@@ -27,6 +27,11 @@ var actions = {
     jsonfile.readFile(karmaFile, function(err, obj) {
         log(actions.INFO, "Read karmaFile JSON");
         karmaUsers = obj;
+        //Convert to lower-case
+        for (var i = 0, L = karmaUsers.length; i < L; i++) {
+          karmaUsers[i] = karmaUsers[i].name.toLowerCase();
+        }
+
     })
 })();
 
@@ -37,6 +42,11 @@ var bot = new irc.Client(config.server, config.botName, {
 bot.addListener("names" + config.channels[0], function(nicks) {
     //Object.keys because node-irc returns nicks as a large object with empty keys...
     users = Object.keys(nicks);
+    //Convert to lower-case
+    for (var i = 0, L = users.length; i < L; i++) {
+      users[i] = users[i].toLowerCase();
+    }
+
 });
 
 bot.addListener("join", function(channel, who) {
@@ -150,7 +160,7 @@ var log = function(action, message) {
 }
 
 var userInChannel = function(user) {
-    if (users.indexOf(user.toString()) > -1) {
+    if (users.indexOf(user.toString().toLowerCase()) > -1) {
         return true;
     } else {
         return false;
@@ -172,7 +182,7 @@ var incrementKarma = function(user) {
     var userIndex;
     if (karmaUsers) {
         if (karmaUsers.length >= 1) {
-            userIndex = arrayObjectIndexOf(karmaUsers, user, "name");
+            userIndex = arrayObjectIndexOf(karmaUsers, user.toLowerCase(), "name");
             log(actions.INFO, "User index is " + userIndex);
         }
         //if the user exists, increment karma, otherwise add them
@@ -197,7 +207,7 @@ var getKarma = function(user) {
     var userIndex;
     if (karmaUsers) {
         if (karmaUsers.length >= 1) {
-            userIndex = arrayObjectIndexOf(karmaUsers, user, "name");
+            userIndex = arrayObjectIndexOf(karmaUsers, user.toLowerCase(), "name");
             log(actions.INFO, "User index is ", userIndex);
         }
         if (userIndex > -1) {
