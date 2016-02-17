@@ -11,8 +11,6 @@ google.resultsPerPage = 1;
 require('string.prototype.startswith');
 
 var users;
-var karmaUsers;
-var karmaFile = config.karmaFile;
 
 var actions = {
     JOIN: "join",
@@ -22,18 +20,6 @@ var actions = {
     INFO: "info"
 };
 
-// Probably a better way to do this
-(function() {
-    jsonfile.readFile(karmaFile, function(err, obj) {
-        log(actions.INFO, "Read karmaFile JSON");
-        karmaUsers = obj;
-        //Convert to lower-case
-        for (var i = 0, L = karmaUsers.length; i < L; i++) {
-          karmaUsers[i] = karmaUsers[i].name.toLowerCase();
-        }
-
-    })
-})();
 
 var bot = new irc.Client(config.server, config.botName, {
     channels: config.channels
@@ -42,10 +28,7 @@ var bot = new irc.Client(config.server, config.botName, {
 bot.addListener("names" + config.channels[0], function(nicks) {
     //Object.keys because node-irc returns nicks as a large object with empty keys...
     users = Object.keys(nicks);
-    //Convert to lower-case
-    for (var i = 0, L = users.length; i < L; i++) {
-      users[i] = users[i].toLowerCase();
-    }
+
 
 });
 
@@ -63,21 +46,7 @@ bot.addListener("message", function(from, to, text) {
 
     //It's a command!
     if (splitMessage[0].startsWith(config.commandPrefix)) {
-        log(actions.INFO, "Command sent");
-        //!karma command
-        if (splitMessage[0] === "!karma" || splitMessage[0] === "!k") {
-            if (splitMessage.length === 2) {
-                userIndex = arrayObjectIndexOf(karmaUsers, splitMessage[1], "name");
-                if (userInChannel(splitMessage[1])) {
-                    message = splitMessage[1] + "'s karma is " + getKarma(splitMessage[1]);
-                } else {
-                    log(actions.ERROR, "No user named " + splitMessage[1] + " found");
-                }
-            } else {
-                message = "Your karma is " + getKarma(from);
-            }
-            //!gh issue command
-        } else if (splitMessage[0] === "!gh" || splitMessage[0] === "!github") {
+        if (splitMessage[0] === "!gh" || splitMessage[0] === "!github") {
             //just !gh
             if (splitMessage.length === 1) {
                 message = format("https://github.com/%s/%s", config.githubUser, config.githubRepo);
@@ -133,17 +102,6 @@ bot.addListener("message", function(from, to, text) {
 	            bot.say(to, message);
 	        }
 		}
-    } else {
-        //karma
-        if (splitMessage[0].indexOf("++") > -1) {
-            //remove ++
-            var user = splitMessage[0].toString().slice(0, -2);
-            if (userInChannel(user)) {
-                incrementKarma(user);
-            } else {
-                bot.say(to, user + " is not in the channel.");
-            }
-        }
     }
 });
 
@@ -174,49 +132,6 @@ var arrayObjectIndexOf = function(array, searchTerm, property) {
         }
     }
     return -1;
-}
-
-/** Karma **/
-
-var incrementKarma = function(user) {
-    var userIndex;
-    if (karmaUsers) {
-        if (karmaUsers.length >= 1) {
-            userIndex = arrayObjectIndexOf(karmaUsers, user.toLowerCase(), "name");
-            log(actions.INFO, "User index is " + userIndex);
-        }
-        //if the user exists, increment karma, otherwise add them
-        if (userIndex > -1) {
-            log(actions.INFO, "karmaUser[index]: ", karmaUsers[userIndex]);
-            karmaUsers[userIndex].karma = karmaUsers[userIndex].karma + 1;
-        } else {
-            //they're a new user and just got karma, so it should be 1
-            karmaUsers.push({
-                "name": user,
-                "karma": 1
-            });
-            log(actions.INFO, "Pushing new user to Karma object");
-        }
-
-        //no matter what, we should save the users to a file
-        jsonfile.writeFile(karmaFile, karmaUsers);
-    }
-}
-
-var getKarma = function(user) {
-    var userIndex;
-    if (karmaUsers) {
-        if (karmaUsers.length >= 1) {
-            userIndex = arrayObjectIndexOf(karmaUsers, user.toLowerCase(), "name");
-            log(actions.INFO, "User index is ", userIndex);
-        }
-        if (userIndex > -1) {
-            log(actions.INFO, "karmaUser[index]: " + karmaUsers[userIndex]);
-            return karmaUsers[userIndex].karma;
-        } else {
-            return -1;
-        }
-    }
 }
 
 /** Github **/
