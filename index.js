@@ -34,8 +34,8 @@ bot.addListener("names" + config.channels[0], function(nicks) {
 
 bot.addListener("join", function(channel, who) {
     log(actions.JOIN, who + " joined " + channel);
-    if(who.indexOf("lounge-user") > -1) {
-    	bot.say(who, "Hey, " + who + ", now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the /nick <new_nickname> command so we know who you are :)");
+    if (who.indexOf("lounge-user") > -1) {
+        bot.say(who, "Hey, " + who + ", now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the /nick <new_nickname> command so we know who you are :)");
     }
 });
 
@@ -48,11 +48,11 @@ bot.addListener("message", function(from, to, text) {
     if (splitMessage[0].startsWith(config.commandPrefix)) {
         if (splitMessage[0] === "!gh" || splitMessage[0] === "!github") {
             //just !gh
+            var arg = splitMessage[1];
             if (splitMessage.length === 1) {
                 message = format("https://github.com/%s/%s", config.githubUser, config.githubRepo);
                 //<number> or repo info
-            } else if (splitMessage.length === 2) {
-                var arg = splitMessage[1];
+            } else if (splitMessage.length === 2 && splitMessage[1] !== "search") {
                 //It's a number, so it's an issue or a commit
                 if (stringIsPositiveInteger(arg)) {
                     log(actions.INFO, config.githubUser);
@@ -61,33 +61,55 @@ bot.addListener("message", function(from, to, text) {
                         repo: config.githubRepo,
                         issue: arg
                     });
-                //It's a commit
-            } else if(arg.length === 7) {
-                log(actions.INFO, "Commit recognized");
+                    //It's a commit!
+                } else if (arg.length === 7 && splitMessage.length === 2 && arg !== "search") {
+                    log(actions.INFO, "Commit recognized");
+                    message = getIssueInformation({
+                        user: config.githubUser,
+                        repo: config.githubRepo,
+                        issue: arg
+                    });
+                } else {
+                    var userRepo = parseUserRepoString(arg);
+                    mesage = format("https://www.github.com/%s/%s", userRepo.user, userRepo.repo);
+                }
+            } else if (splitMessage.length === 3 && splitMessage[1] !== "search") {
+                if (stringIsPositiveInteger(splitMessage[2])) {
+                    message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
+                } else if (splitMessage[2].length === 7) {
+                    message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
+                } else {
+                    message = format("https://github.com/%s/%s", splitMessage[1], splitMessage[2]);
+                }
+            } else if (splitMessage.length === 4 && splitMessage[1] !== "search") {
                 message = getIssueInformation({
-                    user: config.githubUser,
-                    repo: config.githubRepo,
-                    issue: arg
+                    user: splitMessage[1],
+                    repo: splitMessage[2],
+                    issue: splitMessage[3]
                 });
-            } else {
-                var userRepo = parseUserRepoString(arg);
-                mesage = format("https://www.github.com/%s/%s", userRepo.user, userRepo.repo);
+            } else if (splitMessage.length > 2 && splitMessage[1] === "search") {
+                //remov !gh search
+                for(var i = 0; i < 2; i++) {
+                    splitMessage.shift();
+                }
+                //The third string is a repo
+                if(splitMessage[0].includes("/")) {
+                    var userRepo = parseUserRepoString(splitMessage[0]);
+                    //remove the user/repo
+                    splitMessage.shift();
+                    message = searchGithub({
+                        repo: userRepo.repo,
+                        user: userRepo.user,
+                        terms: splitMessage
+                    });
+                } else {
+                    message = searchGithub({
+                        repo: config.githubRepo,
+                        user: config.githubUser,
+                        terms: splitMessage
+                    });
+                }
             }
-        } else if (splitMessage.length === 3) {
-            if (stringIsPositiveInteger(splitMessage[2])) {
-                message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
-            } else if(splitMessage[2].length === 7) {
-                message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
-            } else {
-                message = format("https://github.com/%s/%s", splitMessage[1], splitMessage[2]);
-            }
-        } else if (splitMessage.length === 4) {
-            message = getIssueInformation({
-                user: splitMessage[1],
-                repo: splitMessage[2],
-                issue: splitMessage[3]
-            });
-        }
 
             //Google command
         } else if ((splitMessage[0] === "!g" || splitMessage[0] === "!google") && splitMessage.length > 1) {
@@ -95,30 +117,32 @@ bot.addListener("message", function(from, to, text) {
             var query = splitMessage.slice(1).join(' ');
             log(actions.INFO, query);
             google(query, function(err, next, links) {
-            	if(err) {
-            		log(actions.ERROR, err);
-            	}
-            	bot.say(to, links[0].title + ' - ' + links[0].link);        	
+                if (err) {
+                    log(actions.ERROR, err);
+                }
+                bot.say(to, links[0].title + ' - ' + links[0].link);
             });
         }
-    //Just a message
-   } else {
-        if(text.indexOf("#") > -1) {
-            var index = splitMessage.findIndex(function(s) { 
+        //Just a message
+    } else {
+        if (text.indexOf("#") > -1) {
+            var index = splitMessage.findIndex(function(s) {
                 return s.match(/#\d{2,3}/);
             });
             //Remove #
-            var issueNumber = splitMessage[index].substr(1);
-            message = getIssueInformation({
-                user: config.githubUser,
-                repo: config.githubRepo,
-                issue: issueNumber
-            });
-            log(actions.INFO, index);
+            if(splitMessage[index]) {
+                var issueNumber = splitMessage[index].substr(1);
+                message = getIssueInformation({
+                    user: config.githubUser,
+                    repo: config.githubRepo,
+                    issue: issueNumber
+                });
+                log(actions.INFO, index);
+            }
         }
-   }
-   log(actions.INFO, message);
-   if(message !== "") {
+    }
+    log(actions.INFO, message);
+    if (message !== "") {
         if (message.then) {
             message.then(function(m) {
                 return bot.say(to, m);
@@ -132,13 +156,13 @@ bot.addListener("message", function(from, to, text) {
 /** Utils **/
 
 var log = function(action, message) {
-	var message = "[" + action.toUpperCase() + "]" + " " + message;
-	console.log(message);
-	fs.open('log.txt', 'a', 666, function(e, id) {
-		fs.write(id, message + "\n", null, 'utf8', function(){
-			fs.close(id);
-		});
-	});
+    var message = "[" + action.toUpperCase() + "]" + " " + message;
+    console.log(message);
+    fs.open('log.txt', 'a', 666, function(e, id) {
+        fs.write(id, message + "\n", null, 'utf8', function() {
+            fs.close(id);
+        });
+    });
 }
 
 var userInChannel = function(user) {
@@ -165,7 +189,7 @@ var getIssueInformation = function(options) {
     var repo = options.repo;
     var issueNumber = options.issue;
     console.log(issueNumber);
-    if(stringIsPositiveInteger(issueNumber.toString())) {
+    if (stringIsPositiveInteger(issueNumber.toString())) {
         var result = format("https://api.github.com/repos/%s/%s/issues/%s", user, repo, issueNumber);
         return fetch(result).then(function(res) {
             log(actions.INFO, result);
@@ -219,6 +243,27 @@ var getIssueInformation = function(options) {
             return format("[%s %s] - %s (add: %s, del: %s) - %s", type, author, message, add, del, link);
         });
     }
+}
+
+var searchGithub = function(options) {
+    var repo = options.repo;
+    var user = options.user;
+    var search = options.terms;
+    var result = format("https://api.github.com/search/issues?q=repo:%s/%s+%s", user, repo, search.join("+"));
+    return fetch(result).then(function(res) {
+        log(actions.INFO, result);
+        return res.json();
+    }).then(function(res) {
+        if(res.items[0].state) {
+            var status = res.items[0].state;
+        } else {
+            return "No issue found";
+        }
+        var title = res.items[0].title;
+        var link = res.items[0].html_url;
+        var issueNumber = res.items[0].number;
+        return format("[%s %s] (%s) %s (%s)", "Issue", issueNumber, status, title, link);
+    });
 }
 
 var withIssue = function(obj, issueNumber) {
