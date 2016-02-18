@@ -127,7 +127,7 @@ bot.addListener("message", function(from, to, text) {
     } else {
         if (text.indexOf("#") > -1) {
             var index = splitMessage.findIndex(function(s) {
-                return s.match(/#\d{2,3}/);
+                return s.match(/#(\d+)/);
             });
             //Remove #
             if(splitMessage[index]) {
@@ -196,7 +196,7 @@ var getIssueInformation = function(options) {
             return res.json();
         }).then(function(res) {
             if (res.message === "Not Found") {
-                return "Issue does not exist.";
+                return "Issue not found";
             }
 
             var type = res.pull_request === undefined ? "Issue" : "PR";
@@ -208,7 +208,7 @@ var getIssueInformation = function(options) {
                 return fetch(res.pull_request.url).then(function(res) {
                     return res.json();
                 }).then(function(res) {
-                    if (res.message === "Not Found") {
+                    if (res. ge === "Not Found") {
                         return "PR does not exist.";
                     }
 
