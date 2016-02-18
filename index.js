@@ -208,8 +208,8 @@ var getIssueInformation = function(options) {
                 return fetch(res.pull_request.url).then(function(res) {
                     return res.json();
                 }).then(function(res) {
-                    if (res. ge === "Not Found") {
-                        return "PR does not exist.";
+                    if (res.message === "Not Found") {
+                        return "";
                     }
 
                     var type = "PR";
