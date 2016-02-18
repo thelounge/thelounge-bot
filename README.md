@@ -21,15 +21,16 @@ var config = {
 	server: "chat.freenode.net", //The IRC server
 	botName: "lounge-bot", //The bots nick-name
 	commandPrefix: "!", //The character used to specify a command
-	karmaFile: "karma.json", //The file Karma is stored it
 	githubUser: "thelounge", //The default user used in the !gh command
 	githubRepo: "lounge" //The default account used in the !gh command
 }
 ```
 ### TODO
 - Modularize (`require()` + `module.exports`)
+- Karma
 
 ### Current status
-- Karma (<name>++, !karma <user>, !karma)
 - Github (!gh, !github)
+- Github searching (!gh search)
+- Inline issues (#<issueNumber>)
 - Google (!g <query>, !google <query>)
