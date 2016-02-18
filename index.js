@@ -8,7 +8,7 @@ var google = require('google');
 var fetch = require("node-fetch");
 fetch.Promise = require("bluebird");
 google.resultsPerPage = 1;
-require('string.prototype.startswith');
+require('es6-shim');
 
 var users;
 
@@ -101,18 +101,32 @@ bot.addListener("message", function(from, to, text) {
             	bot.say(to, links[0].title + ' - ' + links[0].link);        	
             });
         }
-
-        log(actions.INFO, message);
-        if(message !== "") {
-           if (message.then) {
-               message.then(function(m) {
-                   return bot.say(to, m);
-               });
-           } else {
-               bot.say(to, message);
-           }
-       }
+    //Just a message
+   } else {
+        if(text.indexOf("#") > -1) {
+            var index = splitMessage.findIndex(function(s) { 
+                return s.match(/#\d{2,3}/);
+            });
+            //Remove #
+            var issueNumber = splitMessage[index].substr(1);
+            message = getIssueInformation({
+                user: config.githubUser,
+                repo: config.githubRepo,
+                issue: issueNumber
+            });
+            log(actions.INFO, index);
+        }
    }
+   log(actions.INFO, message);
+   if(message !== "") {
+        if (message.then) {
+            message.then(function(m) {
+                return bot.say(to, m);
+            });
+        } else {
+            bot.say(to, message);
+        }
+    }
 });
 
 /** Utils **/
