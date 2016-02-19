@@ -126,19 +126,20 @@ bot.addListener("message", function(from, to, text) {
         //Just a message
     } else {
         if (text.indexOf("#") > -1) {
-            var index = splitMessage.findIndex(function(s) {
-                return s.match(/#(\d+)/);
-            });
-            //Remove #
-            if(splitMessage[index]) {
-                var issueNumber = splitMessage[index].substr(1);
+            var issues = text.match(/#([0-9]*)/g);
+            issues.forEach(function (issue) {
+                console.log(issue);
+                var issueNumber = issue.substr(1);
                 message = getIssueInformation({
                     user: config.githubUser,
                     repo: config.githubRepo,
                     issue: issueNumber
                 });
-                log(actions.INFO, index);
-            }
+                message.then(function(m) {
+                    return bot.say(to, m);
+                });
+            });
+            return;
         }
     }
     log(actions.INFO, message);
