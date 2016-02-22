@@ -126,7 +126,7 @@ bot.addListener("message", function(from, to, text) {
         //Just a message
     } else {
         if (text.indexOf("#") > -1 && from.toLowerCase().indexOf("github") === -1) {
-            var issues = text.match(/#([0-9]*)/g);
+            var issues = text.match(/#([0-9]+)/g);
             issues.forEach(function (issue) {
                 console.log(issue);
                 var issueNumber = issue.substr(1);
