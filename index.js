@@ -126,20 +126,22 @@ bot.addListener("message", function(from, to, text) {
         //Just a message
     } else {
         if (text.indexOf("#") > -1 && from.toLowerCase().indexOf("github") === -1) {
-            var issues = text.match(/#([0-9]+)/g);
-            issues.forEach(function (issue) {
-                console.log(issue);
-                var issueNumber = issue.substr(1);
-                message = getIssueInformation({
-                    user: config.githubUser,
-                    repo: config.githubRepo,
-                    issue: issueNumber
+            var issues = text.match(/#([0-9]*)/g);
+            if(issues) {
+                issues.forEach(function (issue) {
+                    console.log(issue);
+                    var issueNumber = issue.substr(1);
+                    message = getIssueInformation({
+                        user: config.githubUser,
+                        repo: config.githubRepo,
+                        issue: issueNumber
+                    });
+                    message.then(function(m) {
+                        return bot.say(to, m);
+                    });
                 });
-                message.then(function(m) {
-                    return bot.say(to, m);
-                });
-            });
-            return;
+                return;
+            }
         }
     }
     log(actions.INFO, message);
@@ -197,7 +199,7 @@ var getIssueInformation = function(options) {
             return res.json();
         }).then(function(res) {
             if (res.message === "Not Found") {
-                return "Issue not found";
+                return "";
             }
 
             var type = res.pull_request === undefined ? "Issue" : "PR";
@@ -224,26 +226,26 @@ var getIssueInformation = function(options) {
                 return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
             }
         });
-    } else {
-        var result = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, issueNumber);
-        return fetch(result).then(function(res) {
-            log(actions.INFO, result);
-            return res.json();
-        }).then(function(res) {
-            if (res.message === "Not Found") {
-                return "Commit not found";
-            }
+} else {
+    var result = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, issueNumber);
+    return fetch(result).then(function(res) {
+        log(actions.INFO, result);
+        return res.json();
+    }).then(function(res) {
+        if (res.message === "Not Found") {
+            return "";
+        }
 
-            var type = "Commit";
-            var author = res.commit.author.name;
-            var message = res.commit.message;
-            var link = res.html_url;
-            var add = res.stats.additions;
-            var del = res.stats.deletions;
+        var type = "Commit";
+        var author = res.commit.author.name;
+        var message = res.commit.message;
+        var link = res.html_url;
+        var add = res.stats.additions;
+        var del = res.stats.deletions;
 
-            return format("[%s %s] - %s (add: %s, del: %s) - %s", type, author, message, add, del, link);
-        });
-    }
+        return format("[%s %s] - %s (add: %s, del: %s) - %s", type, author, message, add, del, link);
+    });
+}
 }
 
 var searchGithub = function(options) {
