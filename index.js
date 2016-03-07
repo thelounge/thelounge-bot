@@ -133,7 +133,7 @@ bot.addListener("message", function(from, to, text) {
         }
         //Just a message
     } else {
-        if (text.indexOf("#") > -1 && from.toLowerCase().indexOf("github") === -1) {
+        if (text.indexOf("#") > -1 && from.toLowerCase().indexOf("wendy") === -1) {
             //this regex (thanks @Max-P and ##regex) checks if there's a free-floating # followed by an infinite amount of characters between 0 and 9.
             var issues = text.match(/#([0-9]*)/g);
             if(issues) {
