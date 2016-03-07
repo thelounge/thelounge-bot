@@ -4,6 +4,7 @@ var config = {
 	botName: "lounge-bot",
 	commandPrefix: "!",
 	karmaFile: "karma.json",
+	ignore: "wendy",
 	githubUser: "thelounge",
 	githubRepo: "lounge"
 }
