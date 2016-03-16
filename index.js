@@ -12,6 +12,7 @@ require('es6-shim');
 
 var users;
 
+//For logging, not really currently useful.
 var actions = {
     JOIN: "join",
     PART: "part",
@@ -20,35 +21,38 @@ var actions = {
     INFO: "info"
 };
 
-
+//see: config.js
 var bot = new irc.Client(config.server, config.botName, {
     channels: config.channels
 });
 
+//The 'names' event is sent whenever a user connects, disconnects, or renames themselves. Used for Karma mainly, which isn't currently implemented, but a helpful thing to have
 bot.addListener("names" + config.channels[0], function(nicks) {
     //Object.keys because node-irc returns nicks as a large object with empty keys...
     users = Object.keys(nicks);
 
 
 });
-
+//Whenver a user joins, let's check their user name. Once TheLounge supports in-line notices, this should probably be changed to bot.notice()
 bot.addListener("join", function(channel, who) {
     log(actions.JOIN, who + " joined " + channel);
+    //TheLounge's default username
     if (who.indexOf("lounge-user") > -1) {
         bot.say(who, "Hey, " + who + ", now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the /nick <new_nickname> command so we know who you are :)");
     }
 });
 
 bot.addListener("message", function(from, to, text) {
+    //Let's turn the message into an array, easier to work with its arguments.
     var splitMessage = text.split(" ");
     var message = "";
     log(actions.MSG, "(" + to + ") " + from + ": " + text);
 
-    //It's a command!
+    //It's a command! startsWith() is provided by es6-shim.
     if (splitMessage[0].startsWith(config.commandPrefix)) {
         if (splitMessage[0] === "!gh" || splitMessage[0] === "!github") {
-            //just !gh
             var arg = splitMessage[1];
+            //just !gh
             if (splitMessage.length === 1) {
                 message = format("https://github.com/%s/%s", config.githubUser, config.githubRepo);
                 //<number> or repo info
@@ -70,13 +74,17 @@ bot.addListener("message", function(from, to, text) {
                         issue: arg
                     });
                 } else {
+                    //!gh user/repo
                     var userRepo = parseUserRepoString(arg);
                     mesage = format("https://www.github.com/%s/%s", userRepo.user, userRepo.repo);
                 }
+                //!gh search
             } else if (splitMessage.length === 3 && splitMessage[1] !== "search") {
+                //search is either an issue or PR
                 if (stringIsPositiveInteger(splitMessage[2])) {
                     message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
                 } else if (splitMessage[2].length === 7) {
+                    //Temporary hack to see if it's a commit
                     message = getIssueInformation(withIssue(parseUserRepoString(splitMessage[1]), splitMessage[2]));
                 } else {
                     message = format("https://github.com/%s/%s", splitMessage[1], splitMessage[2]);
@@ -88,7 +96,7 @@ bot.addListener("message", function(from, to, text) {
                     issue: splitMessage[3]
                 });
             } else if (splitMessage.length > 2 && splitMessage[1] === "search") {
-                //remov !gh search
+                //remove '!gh search'
                 for(var i = 0; i < 2; i++) {
                     splitMessage.shift();
                 }
@@ -146,6 +154,7 @@ bot.addListener("message", function(from, to, text) {
     }
     log(actions.INFO, message);
     if (message !== "") {
+        //If it's returned as a Promise
         if (message.then) {
             message.then(function(m) {
                 return bot.say(to, m);
@@ -157,7 +166,6 @@ bot.addListener("message", function(from, to, text) {
 });
 
 /** Utils **/
-
 var log = function(action, message) {
     var message = "[" + action.toUpperCase() + "]" + " " + message;
     console.log(message);
