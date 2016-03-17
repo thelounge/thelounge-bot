@@ -273,7 +273,13 @@ var searchGithub = function(options) {
         var title = res.items[0].title;
         var link = res.items[0].html_url;
         var issueNumber = res.items[0].number;
-        return format("[%s %s] (%s) %s (%s)", "Issue", issueNumber, status, title, link);
+        var type = "";
+        if(link.indexOf("issues") > -1) {
+            type = "Issue";
+        } else {
+            type = "PR";
+        }
+        return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
     });
 }
 
