@@ -1,0 +1,13 @@
+{
+    "env": {
+        "browser": false,
+        "es6": true,
+        "node": false
+    },
+    globals: {
+        resolve: false,
+
+        subscribe: false,
+        unsubscribe: false
+    }
+}
