@@ -6,11 +6,15 @@ var commands = function(bot, options, action) {
 		if (command[0] === "join") {
 			bot.join(command[1]);
 		} else if (command[0] === "part") {
-			bot.part((command[1] || action.channel), action.nick + " asked me to leave.");
+			if (command[1] == 'undefined' || command[1] == null) {
+				bot.part(action.target, action.nick + " asked me to leave.");
+			} else {
+				bot.part(command[1], action.nick + " asked me to leave.");
+			}
 		} else if (command[0] === "say") { // todo: doesn't work
 			let message = command;
 			message.shift();
-			bot.say(action.channel, message.join(" "));
+			bot.say(action.target, message.join(" "));
 		}
 	}
 }
