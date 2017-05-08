@@ -31,7 +31,6 @@ function getIssueInformation(options) {
     var issueNumber = issue;
     console.log(issueNumber);
     if (stringIsPositiveInteger(issueNumber.toString())) {
-
         const url = format("https://api.github.com/repos/%s/%s/issues/%s", user, repo, issueNumber);
         return fetch(url)
             .then(res => res.json())
@@ -112,5 +111,6 @@ function searchGithub(options) {
 
 module.exports = {
     getIssueInformation,
-    searchGithub
+    searchGithub,
+    stringIsPositiveInteger
 };
