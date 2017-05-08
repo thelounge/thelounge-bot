@@ -38,8 +38,9 @@ var commands = function(bot, options, action) {
 				} else {
 					bot.say(action.target, query);
 				}
+			} else {
+				bot.say(action.target, "No result found for query");
 			}
-			bot.say(action.target, "No result found for query");
 		}
 	}
 	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(options.ignore) === -1) { // if the message contains # and isn't an ignored user
