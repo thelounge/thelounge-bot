@@ -17,12 +17,14 @@ $ node index.js
 Configuration information can be found in the config.json. The default options are below
 ```js
 var config = {
-	channels: ["#thelounge"],//The channels to connect to
-	server: "chat.freenode.net", //The IRC server
-	botName: "lounge-bot", //The bots nick-name
-	commandPrefix: "!", //The character used to specify a command
-	githubUser: "thelounge", //The default user used in the !gh command
-	githubRepo: "lounge" //The default account used in the !gh command
+	channels: ["#thelounge-test"],
+	server: "chat.freenode.net",
+	botName: "lounge-botter",
+	commandPrefix: "!",
+	ignore: ["Wendy"],
+	githubUser: "thelounge",
+	githubRepo: "lounge",
+	owners: ["xPaw", "astorije", "YaManicKill", "MaxLeiter"]
 }
 ```
 ### TODO

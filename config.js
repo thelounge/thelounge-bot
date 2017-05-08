@@ -3,7 +3,6 @@ var config = {
 	server: "chat.freenode.net",
 	botName: "lounge-botter",
 	commandPrefix: "!",
-	karmaFile: "karma.json",
 	ignore: ["Wendy"],
 	githubUser: "thelounge",
 	githubRepo: "lounge",
