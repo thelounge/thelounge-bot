@@ -10,6 +10,7 @@ $ npm install
 
 ### Running
 ```sh
+$ npm run test
 $ node index.js
 ```
 
@@ -28,11 +29,6 @@ var config = {
 }
 ```
 ### TODO
-- Modularize (`require()` + `module.exports`)
-- Karma
-
-### Current status
-- Github (!gh, !github)
-- Github searching (!gh search)
-- Inline issues (#<issueNumber>)
-- Google (!g <query>, !google <query>)
+- Tests
+- Probably manage bans/spam management
+- !CSS page search
