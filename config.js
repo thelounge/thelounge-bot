@@ -1,12 +1,13 @@
 var config = {
-	channels: ["#thelounge"],
+	channels: ["#thelounge-test"],
 	server: "chat.freenode.net",
-	botName: "lounge-bot",
+	botName: "lounge-botter",
 	commandPrefix: "!",
 	karmaFile: "karma.json",
 	ignore: "wendy",
 	githubUser: "thelounge",
-	githubRepo: "lounge"
+	githubRepo: "lounge",
+	owners: ["xPaw", "astorije", "YaManicKill", "MaxLeiter"]
 }
 
 module.exports = config;
