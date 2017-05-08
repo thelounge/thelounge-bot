@@ -21,4 +21,16 @@ var prettyDate = function(date) {
 	return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ', ' + date.getUTCFullYear();
 }
 
-module.exports = { log, log_debug, prettyDate };
+var ip2Hex = function(address) {
+	return address.split(".").map(function(octet) {
+		var hex = parseInt(octet, 10).toString(16);
+
+		if (hex.length === 1) {
+			hex = "0" + hex;
+		}
+
+		return hex;
+	}).join("");
+}
+
+module.exports = { log, log_debug, prettyDate, ip2Hex };

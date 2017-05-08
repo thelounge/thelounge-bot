@@ -4,12 +4,19 @@ const github = require("./plugins/github");
 const admin = require("./plugins/admin");
 const lounge = require("./plugins/lounge");
 const util = require("./util");
+const ip = require("ip");
 const debug = true;
 var bot = new IRC.Client();
 
 bot.connect({
 	host: config.server,
-	nick: config.botName
+	nick: config.botName,
+	username: util.ip2Hex(ip.address()),
+	auto_reconnect: true,
+    auto_reconnect_wait: 4000,
+    auto_reconnect_max_retries: 3,
+    ping_interval: 30,
+    ping_timeout: 120
 });
 
 bot.on('registered', function() {
