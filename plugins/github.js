@@ -43,7 +43,7 @@ var commands = function(bot, options, action) {
 			}
 		}
 	}
-	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(options.ignore) === -1) { // if the message contains # and isn't an ignored user
+	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(action.nick) === -1) { // if the message contains # and isn't an ignored user
 		let issues = action.message.match(/#([0-9]*)/g);
 		if (issues) {
 			issues.forEach(function(issue) {

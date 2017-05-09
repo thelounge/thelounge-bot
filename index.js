@@ -11,6 +11,7 @@ var bot = new IRC.Client();
 bot.connect({
 	host: config.server,
 	nick: config.botName,
+	gecos: config.realName,
 	username: util.ip2Hex(ip.address()),
 	auto_reconnect: true,
     auto_reconnect_wait: 4000,
