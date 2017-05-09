@@ -4,7 +4,7 @@ var config = {
 	botName: "lounge-botter",
 	realName: "TheLounge IRC Bot - https://thelounge.github.io",
 	commandPrefix: "!",
-	ignore: ["MaxLeiter"],
+	ignore: ["Wendy"],
 	githubUser: "thelounge",
 	githubRepo: "lounge",
 	owners: ["xPaw", "astorije", "YaManicKill", "MaxLeiter"]
