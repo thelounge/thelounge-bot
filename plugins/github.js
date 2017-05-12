@@ -18,9 +18,13 @@ var commands = function(bot, options, action) {
 						issue: arg
 					});
 				} else {
-					query = action.nick + ": invalid issue/PR ID.";
+					if (arg === "search") {
+						query = "Search query cannot be empty";
+					} else {
+						query = action.nick + ": invalid issue/PR ID";
+					}
 				}
-			} else if (message.length === 2) { // should be !gh search <query>
+			} else if (message.length >= 2) { // should be !gh search <query>
 				if (arg === "search") {
 					message.shift(); // remove 'search'
 					query = helper.searchGithub({
