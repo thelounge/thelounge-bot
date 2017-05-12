@@ -1,3 +1,5 @@
+"use strict";
+
 var config = {
 	channels: ["#thelounge-test"],
 	server: "chat.freenode.net",
@@ -8,6 +10,6 @@ var config = {
 	githubUser: "thelounge",
 	githubRepo: "lounge",
 	owners: ["xPaw", "astorije", "YaManicKill", "MaxLeiter"]
-}
+};
 
 module.exports = config;

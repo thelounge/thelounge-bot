@@ -1,8 +1,11 @@
+"use strict";
 const helper = require("./github_helpers");
 var commands = function(bot, options, action) {
 	let message = action.message.split(" ");
 	let query;
-	if (message.length < 1) return;
+	if (message.length < 1) {
+		return;
+	}
 	if (action.message.startsWith(options.commandPrefix) || action.message.startsWith(options.botName)) {
 		if (message[0] === "!github" || message[0] === "!gh") {
 			message.shift(); // remove the command
@@ -35,7 +38,7 @@ var commands = function(bot, options, action) {
 			}
 			if (query) {
 				// if it's returned as a Promise
-				if (typeof query.then === 'function') {
+				if (typeof query.then === "function") {
 					query.then(function(m) {
 						return bot.say(action.target, m);
 					});
@@ -61,11 +64,9 @@ var commands = function(bot, options, action) {
 					return bot.say(action.target, m);
 				});
 			});
-			return;
 		}
 	}
-}
-
+};
 
 module.exports = {
 	commands

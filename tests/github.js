@@ -1,3 +1,4 @@
+"use strict";
 const helper = require("../plugins/github_helpers");
 const expect = require("chai").expect;
 

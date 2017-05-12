@@ -1,25 +1,29 @@
+"use strict";
 const fs = require("fs");
+const debug = false;
 
 var log_debug = function(action) {
 	if (debug) {
 		log(action);
 	}
-}
+};
 
 var log = function(text) {
 	let message = prettyDate(new Date(Date.now())) + ": " + text + "\n";
 	console.log(message);
-	fs.appendFile("log.txt", message, function (err) {
-		if (err) return console.log(err);
+	fs.appendFile("log.txt", message, function(err) {
+		if (err) {
+			return console.log(err);
+		}
 	});
-}
+};
 
 var prettyDate = function(date) {
-	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-	'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-	return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ', ' + date.getUTCFullYear();
-}
+	return months[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getUTCFullYear();
+};
 
 var ip2Hex = function(address) {
 	return address.split(".").map(function(octet) {
@@ -31,6 +35,6 @@ var ip2Hex = function(address) {
 
 		return hex;
 	}).join("");
-}
+};
 
-module.exports = { log, log_debug, prettyDate, ip2Hex };
+module.exports = {log, log_debug, prettyDate, ip2Hex};
