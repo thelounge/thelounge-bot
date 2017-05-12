@@ -85,19 +85,20 @@ function getIssueInformation(options) {
 
 function searchGithub(options) {
 	const { repo = config.githubRepo, user = config.githubUser, terms } = options;
+	let status = null;
 	const url = `https://api.github.com/search/issues?q=repo:${user}/${repo}+${ terms.join("+") }`;
 	return fetch(url)
 	.then(res => res.json())
 	.then(function(res) {
 		if (res.items[0].state) {
-			const status = res.items[0].state;
+			status = res.items[0].state;
 		} else {
 			return "No issue found";
 		}
 		const title = res.items[0].title;
 		const link = res.items[0].html_url;
 		const issueNumber = res.items[0].number;
-		const type = "";
+		let type = "";
 		if(link.indexOf("issues") > -1) {
 			type = "Issue";
 		} else {
