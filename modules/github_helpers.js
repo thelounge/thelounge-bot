@@ -83,7 +83,6 @@ function getIssueInformation(options) {
 }
 
 function searchGithub(options) {
-
 	const {repo = config.githubRepo, user = config.githubUser, terms} = options;
 	let status = null;
 	const url = `https://api.github.com/search/issues?q=repo:${user}/${repo}+${ terms.join("+") }`;

@@ -1,5 +1,5 @@
 "use strict";
-const helper = require("../plugins/github_helpers");
+const helper = require("../modules/github_helpers");
 const expect = require("chai").expect;
 
 describe("stringIsPositiveInteger", function() {

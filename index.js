@@ -1,9 +1,9 @@
 "use strict";
 const IRC = require("irc-framework");
 const config = require("./config.js");
-const github = require("./plugins/github");
-const admin = require("./plugins/admin");
-const lounge = require("./plugins/lounge");
+const github = require("./modules/github");
+const admin = require("./modules/admin");
+const lounge = require("./modules/lounge");
 const util = require("./util");
 const ip = require("ip");
 var bot = new IRC.Client();
