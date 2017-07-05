@@ -3,6 +3,7 @@ const {format} = require("util");
 const fetch = require("node-fetch");
 fetch.Promise = require("bluebird");
 const config = require("../config");
+const c = require('irc-colors');
 
 function stringIsPositiveInteger(string) {
 	var number = Number(string);
@@ -52,14 +53,14 @@ function getIssueInformation(options) {
 						}
 
 						type = "PR";
-						status = res.merged_at === null ? "closed" : "merged";
+						status = res.merged_at === null ? c.red("closed") : c.green("merged");
 						title = res.title;
 						link = res.html_url;
 
-						return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
+						return format("[%s %s] (%s) %s (%s)", c.bold.pink(type), c.bold.pink(issueNumber), status, title, link);
 					});
 				}
-				return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
+				return format("[%s %s] (%s) %s (%s)", c.bold.pink(type), c.bold.pink(issueNumber), status, title, link);
 			});
 	} else {
 		const url = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, issueNumber);
@@ -77,7 +78,7 @@ function getIssueInformation(options) {
 				let add = res.stats.additions;
 				let del = res.stats.deletions;
 
-				return format("[%s %s] - %s (add: %s, del: %s) - %s", type, author, message, add, del, link);
+				return format("[%s %s] - %s (add: %s, del: %s) - %s", c.bold.pink(type), author, message, add, del, link);
 			});
 	}
 }
@@ -91,6 +92,11 @@ function searchGithub(options) {
 		.then(function(res) {
 			if (res.items[0].state) {
 				status = res.items[0].state;
+				if (status === "closed") {
+					status = c.red(status);
+				} else {
+					status = c.green(status);
+				}
 			} else {
 				return "No issue found";
 			}
@@ -103,7 +109,7 @@ function searchGithub(options) {
 			} else {
 				type = "PR";
 			}
-			return format("[%s %s] (%s) %s (%s)", type, issueNumber, status, title, link);
+			return format("[%s %s] (%s) %s (%s)", c.bold.pink(type), c.bold.pink(issueNumber), status, title, link);
 		});
 }
 
