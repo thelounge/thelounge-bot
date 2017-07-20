@@ -1,11 +1,57 @@
 "use strict";
 const helper = require("./github_helpers");
+const URL = require("url-parse");
+const util = require("../util");
+
 var commands = function(bot, options, action) {
 	let message = action.message.split(" ");
 	let query;
 	if (message.length < 1) {
 		return;
 	}
+
+	let urls = [];
+	for (let x in message) {
+		if (util.isUrl(x)) {
+			urls.push(x);
+		}
+	}
+
+	for (var i = 0; i < urls.length; i++) {
+		let link = URL(urls[i]);
+		if (!(link.hostname === "www.github.com" || link.hostname === "github.com")) {
+			continue;
+		} else { // is a github link
+			const beginning = `/${options.githubUser}/${options.githubRepo}/`;
+			if (link.pathname.startsWith(beginning)) { // i.e. /thelounge/lounge/
+				let id = link.pathname.substring(beginning.length); // "pulls/5" || "issue/5"
+				if (id.startsWith("pulls")) {
+					id = id.substring(5);
+				} else if (id.startsWith("issues")) {
+					id = id.substring(6);
+				} else {
+					break;
+				}
+
+				const query = helper.getIssueInformation({
+					user: options.githubUser,
+					repo: options.githubRepo,
+					issue: id
+				});
+
+				if (query) {
+					if (typeof query.then === "function") {
+						query.then(function(m) {
+							return bot.say(action.target, m);
+						});
+					} else {
+						bot.say(action.target, query);
+					}
+				}
+			}
+		}
+	}
+
 	if (action.message.startsWith(options.commandPrefix) || action.message.startsWith(options.botName)) {
 		if (message[0] === "!github" || message[0] === "!gh") {
 			message.shift(); // remove the command
