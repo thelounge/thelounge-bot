@@ -3,9 +3,16 @@ const helper = require("./github_helpers");
 var commands = function(bot, options, action) {
 	let message = action.message.split(" ");
 	let query;
+	let target = action.target;
+
 	if (message.length < 1) {
 		return;
 	}
+
+	if (action.target === bot.user.nick) {
+		target = action.nick;
+	}
+
 	if (action.message.startsWith(options.commandPrefix) || action.message.startsWith(options.botName)) {
 		if (message[0] === "!github" || message[0] === "!gh") {
 			message.shift(); // remove the command
@@ -40,13 +47,13 @@ var commands = function(bot, options, action) {
 				// if it's returned as a Promise
 				if (typeof query.then === "function") {
 					query.then(function(m) {
-						return bot.say(action.target, m);
+						return bot.say(target, m);
 					});
 				} else {
-					bot.say(action.target, query);
+					bot.say(target, query);
 				}
 			} else {
-				bot.say(action.target, "No result found for query");
+				bot.say(target, "No result found for query");
 			}
 		}
 	}
@@ -61,7 +68,7 @@ var commands = function(bot, options, action) {
 					issue: issueNumber
 				});
 				query.then(function(m) {
-					return bot.say(action.target, m);
+					return bot.say(target, m);
 				});
 			});
 		}
