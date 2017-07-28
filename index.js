@@ -33,7 +33,7 @@ bot.on("close", function() {
 
 bot.on("message", function(event) {
 	if (!event.from_server) {
-		util.log("<" + event.nick + ">" + ": " + event.message);
+		util.log(event.target + ": " + "<" + event.nick + ">" + ": " + event.message);
 		if (event.message.indexOf("whois") === 0) {
 			bot.whois(event.message.split(" ")[1]);
 		}

@@ -3,7 +3,7 @@ const {format} = require("util");
 const fetch = require("node-fetch");
 fetch.Promise = require("bluebird");
 const config = require("../config");
-const c = require('irc-colors');
+const c = require("irc-colors");
 
 function stringIsPositiveInteger(string) {
 	var number = Number(string);
