@@ -1,7 +1,7 @@
 "use strict";
 const helper = require("./github_helpers");
 var commands = function(bot, options, action) {
-	let message = action.message.split(" ");
+	const message = action.message.split(" ");
 	let query;
 	let target = action.target;
 
@@ -58,10 +58,10 @@ var commands = function(bot, options, action) {
 		}
 	}
 	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(action.nick) === -1) { // if the message contains # and isn't an ignored user
-		let issues = action.message.match(/#([0-9]*)/g);
+		const issues = action.message.match(/#([0-9]*)/g);
 		if (issues) {
 			issues.forEach(function(issue) {
-				let issueNumber = issue.substr(1);
+				const issueNumber = issue.substr(1);
 				query = helper.getIssueInformation({
 					user: options.githubUser,
 					repo: options.githubRepo,
