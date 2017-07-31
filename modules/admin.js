@@ -5,7 +5,7 @@ var commands = function(bot, options, action) {
 		return;
 	}
 	if (action.message.startsWith(options.botName)) {
-		let command = action.message.split(" ");
+		const command = action.message.split(" ");
 		command.shift();
 		if (command[0] === "join") {
 			bot.join(command[1]);
@@ -16,7 +16,7 @@ var commands = function(bot, options, action) {
 				bot.part(command[1], action.nick + " asked me to leave.");
 			}
 		} else if (command[0] === "say" || command[0] === "echo") {
-			let message = command;
+			const message = command;
 			message.shift();
 			bot.say(action.target, message.join(" "));
 		}

@@ -33,7 +33,7 @@ function getIssueInformation(options) {
 	if (stringIsPositiveInteger(issueNumber.toString())) {
 		const url = format("https://api.github.com/repos/%s/%s/issues/%s", user, repo, issueNumber);
 		return fetch(url)
-			.then(res => res.json())
+			.then((res) => res.json())
 			.then(function(res) {
 				if (res.message === "Not Found") {
 					return "";
@@ -45,50 +45,50 @@ function getIssueInformation(options) {
 				let link = res.html_url;
 
 				if (type === "PR" && status === "closed") {
-					return fetch(res.pull_request.url).then(function(res) {
-						return res.json();
-					}).then(function(res) {
-						if (res.message === "Not Found") {
-							return "";
-						}
+					return fetch(res.pull_request.url)
+						.then((res2) => res2.json())
+						.then((res3) => {
+							if (res3.message === "Not Found") {
+								return "";
+							}
 
-						type = "PR";
-						status = res.merged_at === null ? c.red("closed") : c.green("merged");
-						title = res.title;
-						link = res.html_url;
+							type = "PR";
+							status = res3.merged_at === null ? c.red("closed") : c.green("merged");
+							title = res3.title;
+							link = res3.html_url;
 
-						return format("[%s %s] (%s) %s (%s)", c.bold.pink(type), c.bold.pink(issueNumber), status, title, link);
-					});
+							return format("[%s %s] (%s) %s (%s)", c.bold.pink(type), c.bold.pink(issueNumber), status, title, link);
+						});
 				}
+
 				return format("[%s %s] (%s) %s (%s)", c.bold.pink(type), c.bold.pink(issueNumber), status, title, link);
 			});
-	} else {
-		const url = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, issueNumber);
-		return fetch(url)
-			.then(res => res.json())
-			.then(function(res) {
-				if (res.message === "Not Found") {
-					return "";
-				}
-
-				let type = "Commit";
-				let author = res.commit.author.name;
-				let message = res.commit.message;
-				let link = res.html_url;
-				let add = res.stats.additions;
-				let del = res.stats.deletions;
-
-				return format("[%s %s] - %s (add: %s, del: %s) - %s", c.bold.pink(type), author, message, add, del, link);
-			});
 	}
+	const url = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, issueNumber);
+	return fetch(url)
+		.then((res) => res.json())
+		.then(function(res) {
+			if (res.message === "Not Found") {
+				return "";
+			}
+
+			const type = "Commit";
+			const author = res.commit.author.name;
+			const message = res.commit.message;
+			const link = res.html_url;
+			const add = res.stats.additions;
+			const del = res.stats.deletions;
+
+			return format("[%s %s] - %s (add: %s, del: %s) - %s", c.bold.pink(type), author, message, add, del, link);
+		});
 }
 
 function searchGithub(options) {
 	const {repo = config.githubRepo, user = config.githubUser, terms} = options;
 	let status = null;
-	const url = `https://api.github.com/search/issues?q=repo:${user}/${repo}+${ terms.join("+") }`;
+	const url = `https://api.github.com/search/issues?q=repo:${user}/${repo}+${terms.join("+")}`;
 	return fetch(url)
-		.then(res => res.json())
+		.then((res) => res.json())
 		.then(function(res) {
 			if (res.items[0].state) {
 				status = res.items[0].state;

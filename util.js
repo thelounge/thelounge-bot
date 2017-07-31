@@ -9,7 +9,7 @@ var log_debug = function(action) {
 };
 
 var log = function(text) {
-	let message = prettyDate(new Date(Date.now())) + ": " + text + "\n";
+	const message = prettyDate(new Date(Date.now())) + ": " + text + "\n";
 	console.log(message);
 	fs.appendFile("log.txt", message, function(err) {
 		if (err) {
