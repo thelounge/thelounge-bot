@@ -36,3 +36,6 @@ node_modules
 #lounge-specific
 karma.json
 log.txt
+
+# package lock file
+package-lock.json
