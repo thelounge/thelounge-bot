@@ -47,7 +47,7 @@ bot.on("message", function(event) {
 bot.on("join", function(event) {
 	util.log(event.nick + " joined");
 	if (event.nick.indexOf("lounge-user") > -1) {
-		bot.say(event.nick, "Hey, " + event.nick + ", now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the /nick <new_nickname> command so we know who you are :)");
+		bot.say(event.nick, "Hey " + event.nick + ", now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using `/nick <new_nickname>` so we know who you are! 🙂");
 	}
 });
 
