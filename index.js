@@ -26,6 +26,7 @@ bot.on("registered", function() {
 	config.channels.forEach(function(e) {
 		bot.join(e);
 	});
+	lounge.init(config);
 });
 
 bot.on("close", function() {
