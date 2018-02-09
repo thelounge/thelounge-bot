@@ -15,8 +15,9 @@ var commands = function(bot, options, action) {
 
 	const target = args.split(/[ ,]/g).filter(Boolean).join(", ");
 	const url = map.get(words[0]);
-
-	bot.say(action.target, (target ? target + ": " + url : url));
+	if (url) {
+		bot.say(action.target, (target ? target + ": " + url : url));
+	}
 };
 
 function setupMap(options) {
