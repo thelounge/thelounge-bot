@@ -1,22 +1,26 @@
 "use strict";
-const helper = require("./github_helpers");
-var commands = function(bot, options, action) {
-	const message = action.message.split(" ");
-	let query;
-	let target = action.target;
 
-	if (message.length < 1) {
+const helper = require("./github_helpers");
+
+var commands = function(bot, options, action) {
+	if (action.message.length < 2) {
 		return;
 	}
+
+	let query;
+	let target = action.target;
 
 	if (action.target === bot.user.nick) {
 		target = action.nick;
 	}
 
 	if (action.message.startsWith(options.commandPrefix) || action.message.startsWith(options.botName)) {
+		const message = action.message.split(" ");
+
 		if (message[0] === "!github" || message[0] === "!gh") {
 			message.shift(); // remove the command
 			const arg = message[0];
+
 			if (message.length === 1) {
 				if (helper.stringIsPositiveInteger(arg)) {
 					query = helper.getIssueInformation({
@@ -43,6 +47,7 @@ var commands = function(bot, options, action) {
 					query = action.nick + ": invalid command.";
 				}
 			}
+
 			if (query) {
 				// if it's returned as a Promise
 				if (typeof query.then === "function") {
@@ -57,6 +62,7 @@ var commands = function(bot, options, action) {
 			}
 		}
 	}
+
 	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(action.nick) === -1) { // if the message contains # and isn't an ignored user
 		const issues = action.message.match(/#([0-9]*)/g);
 		if (issues) {
