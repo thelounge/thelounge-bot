@@ -1,6 +1,7 @@
 "use strict";
 
 const helper = require("./github_helpers");
+const issueNumbersRegex = /\B#([0-9]+)\b/g;
 
 var commands = function(bot, options, action) {
 	if (action.message.length < 2) {
@@ -64,7 +65,7 @@ var commands = function(bot, options, action) {
 	}
 
 	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(action.nick) === -1) { // if the message contains # and isn't an ignored user
-		const issues = action.message.match(/#([0-9]*)/g);
+		const issues = action.message.match(issueNumbersRegex);
 		if (issues) {
 			issues.forEach(function(issue) {
 				const issueNumber = issue.substr(1);
