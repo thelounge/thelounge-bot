@@ -1,11 +1,11 @@
 "use strict";
 let map;
 
-var init = function(options) {
+function init(options) {
 	map = setupMap(options);
 }
 
-var commands = function(bot, options, action) {
+function commands(bot, options, action) {
 	const message = action.message;
 	const words = message.split(" ");
 
@@ -18,7 +18,7 @@ var commands = function(bot, options, action) {
 	if (url) {
 		bot.say(action.target, (target ? target + ": " + url : url));
 	}
-};
+}
 
 function setupMap(options) {
 	const temp = new Map();
