@@ -66,7 +66,7 @@ function getIssueInformation(options) {
 
 			res.state = capitalizeFirstLetter(res.state);
 
-			return `🤖 ${c[color](`${res.state} ${prefix}`)} ${c.bold.blue(`#${res.number}`)} - ${res.title} ${res.html_url}`;
+			return `${c.olive("»")} ${c[color](`${res.state} ${prefix}`)} ${c.bold.blue(`#${res.number}`)} - ${res.title} ${res.html_url}`;
 		});
 }
 
