@@ -5,28 +5,6 @@ fetch.Promise = require("bluebird");
 const config = require("../config");
 const c = require("irc-colors");
 
-function stringIsPositiveInteger(string) {
-	var number = Number(string);
-
-	if (isNaN(number)) {
-		return false;
-	}
-
-	if (number === Infinity) {
-		return false;
-	}
-
-	if (number < 1) {
-		return false;
-	}
-
-	if (Math.floor(number) !== number) {
-		return false;
-	}
-
-	return true;
-}
-
 function getIssueInformation(options) {
 	const {repo = config.githubRepo, user = config.githubUser, issue} = options;
 	const url = format("https://api.github.com/repos/%s/%s/issues/%s", user, repo, issue);
@@ -70,23 +48,37 @@ function getIssueInformation(options) {
 		});
 }
 
+function getCommitInformation(options) {
+	const {repo = config.githubRepo, user = config.githubUser, commit} = options;
+	const url = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, commit);
+
+	return fetch(url)
+		.then((res) => res.json())
+		.then((res) => {
+			if (res.message === "Not Found") {
+				return "Commit not found.";
+			}
+
+			return `Commit by ${c.pink(res.commit.author.name)} on ${c.pink(res.commit.author.date)} - ${res.commit.message} ${res.html_url}`;
+		});
+}
+
 function searchGithub(options) {
 	const {repo = config.githubRepo, user = config.githubUser, terms} = options;
-	let status = null;
 	const url = `https://api.github.com/search/issues?q=repo:${user}/${repo}+${terms.join("+")}`;
 
 	return fetch(url)
 		.then((res) => res.json())
 		.then(function(res) {
-			if (res.items[0].state) {
-				status = res.items[0].state;
-				if (status === "closed") {
-					status = c.red(status);
-				} else {
-					status = c.green(status);
-				}
+			if (!res.items || res.items.length === 0) {
+				return "Nothing was found.";
+			}
+
+			let status = res.items[0].state;
+			if (status === "closed") {
+				status = c.red(status);
 			} else {
-				return "No issue found";
+				status = c.green(status);
 			}
 
 			const title = res.items[0].title;
@@ -110,6 +102,6 @@ function capitalizeFirstLetter(string) {
 
 module.exports = {
 	getIssueInformation,
+	getCommitInformation,
 	searchGithub,
-	stringIsPositiveInteger
 };

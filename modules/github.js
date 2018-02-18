@@ -8,79 +8,73 @@ var commands = function(bot, options, action) {
 		return;
 	}
 
-	let query;
-	let target = action.target;
-
+	// Only handle github commands in channels to prevent abuse
 	if (action.target === bot.user.nick) {
-		target = action.nick;
+		return;
 	}
 
-	if (action.message.startsWith(options.commandPrefix) || action.message.startsWith(options.botName)) {
+	if (action.message.startsWith(options.commandPrefix)) {
 		const message = action.message.split(" ");
+		const cmd = message.shift();
 
-		if (message[0] === "!github" || message[0] === "!gh") {
-			message.shift(); // remove the command
-			const arg = message[0];
-
-			if (message.length === 1) {
-				if (helper.stringIsPositiveInteger(arg)) {
-					query = helper.getIssueInformation({
-						user: options.githubUser,
-						repo: options.githubRepo,
-						issue: arg
-					});
-				} else {
-					if (arg === "search") {
-						query = "Search query cannot be empty";
-					} else {
-						query = action.nick + ": invalid issue/PR ID";
-					}
-				}
-			} else if (message.length >= 2) { // should be !gh search <query>
-				if (arg === "search") {
-					message.shift(); // remove 'search'
-					query = helper.searchGithub({
-						repo: options.githubRepo,
-						user: options.githubUser,
-						terms: message
-					});
-				} else {
-					query = action.nick + ": invalid command.";
-				}
-			}
-
-			if (query) {
-				// if it's returned as a Promise
-				if (typeof query.then === "function") {
-					query.then(function(m) {
-						return bot.say(target, m);
-					});
-				} else {
-					bot.say(target, query);
-				}
-			} else {
-				bot.say(target, "No result found for query");
-			}
+		if (cmd === "!github" || cmd === "!gh") {
+			handleSearchCommand(bot, options, action, message);
 		}
 	}
 
-	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(action.nick) === -1) { // if the message contains # and isn't an ignored user
-		const issues = action.message.match(issueNumbersRegex);
-		if (issues) {
-			issues.forEach(function(issue) {
-				const issueNumber = issue.substr(1);
-				query = helper.getIssueInformation({
-					user: options.githubUser,
-					repo: options.githubRepo,
-					issue: issueNumber
-				});
-				query.then(function(m) {
-					return bot.say(target, m);
-				});
-			});
-		}
+	// if the message contains # and isn't an ignored user
+	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(action.nick) === -1) {
+		handleIssueNumber(bot, options, action);
 	}
 };
+
+function handleSearchCommand(bot, options, action, message) {
+	const reply = (replyMsg) => bot.say(action.target, `${action.nick}: ${replyMsg}`);
+
+	if (message.length === 0) {
+		return reply("Usage: !gh search <query> or !gh <commit>");
+	}
+
+	const cmd = message.shift();
+
+	if (cmd === "search") {
+		if (message.length === 0) {
+			return reply("Search query cannot be empty.");
+		}
+
+		return helper.searchGithub({
+			repo: options.githubRepo,
+			user: options.githubUser,
+			terms: message,
+		}).then(reply);
+	}
+
+	helper.getCommitInformation({
+		user: options.githubUser,
+		repo: options.githubRepo,
+		commit: cmd,
+	}).then(reply);
+}
+
+function handleIssueNumber(bot, options, action) {
+	const issues = action.message.match(issueNumbersRegex);
+
+	if (issues) {
+		issues.forEach((issue) => {
+			const issueNumber = issue.substr(1);
+
+			helper.getIssueInformation({
+				user: options.githubUser,
+				repo: options.githubRepo,
+				issue: issueNumber,
+			}).then((message) => {
+				if (message) {
+					bot.say(action.target, message);
+				}
+			});
+		});
+	}
+}
 
 module.exports = {
 	commands
