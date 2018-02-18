@@ -1,12 +1,12 @@
 "use strict";
+
 const IRC = require("irc-framework");
 const config = require("./config.js");
 const github = require("./modules/github");
 const admin = require("./modules/admin");
-const lounge = require("./modules/lounge");
 const util = require("./util");
 const ip = require("ip");
-var bot = new IRC.Client();
+const bot = new IRC.Client();
 
 bot.connect({
 	host: config.server,
@@ -26,7 +26,6 @@ bot.on("registered", function() {
 	config.channels.forEach(function(e) {
 		bot.join(e);
 	});
-	lounge.init(config);
 });
 
 bot.on("close", function() {
@@ -34,19 +33,19 @@ bot.on("close", function() {
 });
 
 bot.on("message", function(event) {
-	if (!event.from_server) {
-		util.log(event.target + ": " + "<" + event.nick + ">" + ": " + event.message);
-		if (event.message.indexOf("whois") === 0) {
-			bot.whois(event.message.split(" ")[1]);
-		}
-		admin.commands(bot, config, event);
-		github.commands(bot, config, event);
-		lounge.commands(bot, config, event);
+	if (event.from_server) {
+		return;
 	}
+
+	util.log(event.target + ": " + "<" + event.nick + ">" + ": " + event.message);
+
+	admin.commands(bot, config, event);
+	github.commands(bot, config, event);
 });
 
 bot.on("join", function(event) {
 	util.log(event.nick + " joined");
+
 	if (event.nick.indexOf("lounge-user") > -1) {
 		bot.say(event.nick, "Hey " + event.nick + ", now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using `/nick <new_nickname>` so we know who you are! 🙂");
 	}
@@ -55,4 +54,3 @@ bot.on("join", function(event) {
 bot.on("part", function(event) {
 	util.log(event.channel + ": " + event.nick + " left");
 });
-
