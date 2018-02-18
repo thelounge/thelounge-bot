@@ -3,15 +3,11 @@
 A node-js IRC bot for [The Lounge's](https://www.github.com/TheLounge) IRC channel on freenode.
 
 
-### Setup
+### Setup and running
 ```sh
 $ npm install
-```
-
-### Running
-```sh
-$ npm run test
-$ node index.js
+$ npm test
+$ npm start
 ```
 
 ### Config
@@ -29,7 +25,3 @@ var config = {
 	owners: ["xPaw", "astorije", "YaManicKill", "MaxLeiter"]
 }
 ```
-### TODO
-- Tests
-- Probably manage bans/spam management
-- !CSS page search
