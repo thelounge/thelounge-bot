@@ -3,7 +3,7 @@
 const helper = require("./github_helpers");
 const issueNumbersRegex = /\B#([0-9]+)\b/g;
 
-var commands = function(bot, options, action) {
+const commands = function(bot, options, action) {
 	if (action.message.length < 2) {
 		return;
 	}
@@ -77,5 +77,5 @@ function handleIssueNumber(bot, options, action) {
 }
 
 module.exports = {
-	commands
+	commands,
 };

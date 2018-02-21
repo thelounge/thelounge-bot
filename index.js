@@ -18,7 +18,7 @@ bot.connect({
 	auto_reconnect_wait: 4000,
 	auto_reconnect_max_retries: 3,
 	ping_interval: 30,
-	ping_timeout: 120
+	ping_timeout: 120,
 });
 
 bot.on("registered", function() {

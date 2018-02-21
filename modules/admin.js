@@ -1,12 +1,14 @@
 "use strict";
 
-var commands = function(bot, options, action) {
+const commands = function(bot, options, action) {
 	if (options.owners.indexOf(action.nick) < 0) {
 		return;
 	}
+
 	if (action.message.startsWith(options.botName)) {
 		const command = action.message.split(" ");
 		command.shift();
+
 		if (command[0] === "join") {
 			bot.join(command[1]);
 		} else if (command[0] === "part" || command[0] === "leave" || command[0] === "exit") {

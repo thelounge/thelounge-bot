@@ -75,6 +75,7 @@ function searchGithub(options) {
 			}
 
 			let status = res.items[0].state;
+
 			if (status === "closed") {
 				status = c.red(status);
 			} else {
