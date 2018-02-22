@@ -9,7 +9,7 @@ const config = {
 	commandPrefix: "!",
 	ignore: ["Wendy"],
 	githubUser: "thelounge",
-	githubRepo: "lounge",
+	githubRepo: "thelounge",
 	owners: ["xPaw", "astorije", "YaManicKill", "MaxLeiter"],
 };
 
