@@ -8,6 +8,10 @@
     "test": "mocha --recursive tests/ && eslint .",
     "lint": "eslint ."
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thelounge/lounge-bot.git"
+  },
   "author": "MaxLeiter",
   "license": "MIT",
   "dependencies": {

@@ -29,7 +29,7 @@ rules:
   linebreak-style: [error, unix]
   no-alert: error
   no-catch-shadow: error
-  no-confusing-arrow: error
+  no-confusing-arrow: [error, {allowParens: true}]
   no-control-regex: off
   no-duplicate-imports: error
   no-else-return: error
@@ -46,6 +46,10 @@ rules:
   no-use-before-define: [error, {functions: false}]
   no-var: error
   object-curly-spacing: [error, never]
+  object-shorthand:
+    - error
+    - methods
+    - avoidExplicitReturnArrows: true
   padded-blocks: [error, never]
   padding-line-between-statements:
     - error
@@ -62,7 +66,7 @@ rules:
   prefer-const: error
   prefer-rest-params: error
   prefer-spread: error
-  quote-props: [error, as-needed]
+  quote-props: [error, consistent-as-needed]
   quotes: [error, double, avoid-escape]
   rest-spread-spacing: error
   semi-spacing: error
