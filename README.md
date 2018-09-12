@@ -5,9 +5,9 @@ A node-js IRC bot for [The Lounge's](https://www.github.com/TheLounge) IRC chann
 
 ### Setup and running
 ```sh
-$ npm install
-$ npm test
-$ npm start
+$ yarn
+$ yarn test
+$ yarn start
 ```
 
 ### Config
