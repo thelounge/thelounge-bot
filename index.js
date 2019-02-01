@@ -49,6 +49,10 @@ bot.on("join", function(event) {
 	if (event.nick.startsWith("lounge-user") || event.nick.startsWith("thelounge")) {
 		bot.say(event.nick, `👋 Hey \x02${event.nick}\x0F, now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the \x11/nick <new_nickname>\x0F command so we know who you are! 🙂`);
 	}
+
+	if (event.channel === "#shout-irc") {
+		bot.say(event.nick, `👋 Hey \x02${event.nick}\x0F, just a heads up that shout is now inactive, and The Lounge has taken its place. Come join us in #thelounge or check https://thelounge.chat for more info.`);
+	}
 });
 
 bot.on("part", function(event) {
