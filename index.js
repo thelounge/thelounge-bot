@@ -10,15 +10,12 @@ const bot = new IRC.Client();
 
 bot.connect({
 	host: config.server,
+	port: config.server_port,
+	tls: config.server_tls,
 	nick: config.botName,
 	gecos: config.realName,
 	username: util.ip2Hex(ip.address()),
 	password: config.password,
-	auto_reconnect: true,
-	auto_reconnect_wait: 4000,
-	auto_reconnect_max_retries: 3,
-	ping_interval: 30,
-	ping_timeout: 120,
 });
 
 bot.on("registered", function() {
