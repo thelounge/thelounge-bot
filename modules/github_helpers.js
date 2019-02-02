@@ -1,7 +1,6 @@
 "use strict";
 const {format} = require("util");
 const fetch = require("node-fetch");
-fetch.Promise = require("bluebird");
 const config = require("../config");
 const c = require("irc-colors");
 
