@@ -15,15 +15,15 @@
   "author": "MaxLeiter",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "3.5.2",
+    "bluebird": "3.5.3",
     "ip": "1.1.5",
-    "irc-colors": "1.4.3",
-    "irc-framework": "3.1.0",
-    "node-fetch": "2.2.0"
+    "irc-colors": "1.5.0",
+    "irc-framework": "4.1.0",
+    "node-fetch": "2.3.0"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "eslint": "4.3.0",
-    "mocha": "3.3.0"
+    "chai": "4.2.0",
+    "eslint": "5.13.0",
+    "mocha": "5.2.0"
   }
 }
