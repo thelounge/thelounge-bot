@@ -41,7 +41,11 @@ bot.on("message", function(event) {
 });
 
 bot.on("join", function(event) {
-	util.log(event.nick + " joined");
+	util.log(`${event.nick} joined ${event.channel}`);
+
+	if (event.nick === bot.user.nick) {
+		return;
+	}
 
 	if (event.nick.startsWith("lounge-user") || event.nick.startsWith("thelounge")) {
 		bot.say(event.nick, `👋 Hey \x02${event.nick}\x0F, now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the \x11/nick <new_nickname>\x0F command so we know who you are! 🙂`);
