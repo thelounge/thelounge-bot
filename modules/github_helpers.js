@@ -58,8 +58,8 @@ function getCommitInformation(options) {
 				return "Commit not found.";
 			}
 
-			// Remove new lines and limit the length of the commit message
-			const message = res.commit.message.replace(/\r?\n/g, "").substring(0, 150);
+			// Take the first line of the commit message and limit its length
+			const message = res.commit.message.split("\n")[0].substring(0, 100).trim();
 
 			return `Commit by ${c.pink(res.commit.author.name)} on ${c.pink(res.commit.author.date)} - ${message} ${res.html_url}`;
 		});
