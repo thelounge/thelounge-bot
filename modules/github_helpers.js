@@ -58,7 +58,10 @@ function getCommitInformation(options) {
 				return "Commit not found.";
 			}
 
-			return `Commit by ${c.pink(res.commit.author.name)} on ${c.pink(res.commit.author.date)} - ${res.commit.message} ${res.html_url}`;
+			// Remove new lines and limit the length of the commit message
+			const message = res.commit.message.replace(/\r?\n/g, "").substring(0, 150);
+
+			return `Commit by ${c.pink(res.commit.author.name)} on ${c.pink(res.commit.author.date)} - ${message} ${res.html_url}`;
 		});
 }
 
