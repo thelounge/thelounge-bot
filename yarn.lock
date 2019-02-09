@@ -24,9 +24,9 @@ acorn-jsx@^5.0.0:
   integrity sha512-HJ7CfNHrfJLlNTzIEUTj43LNWGkqpRLxm3YjAlcD0ACydk9XynzYsCBHxut+iqt+1aBXkx9UP/w/ZqMr13XIzg==
 
 acorn@^6.0.2:
-  version "6.0.6"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.0.6.tgz#cd75181670d5b99bdb1b1c993941d3a239ab1f56"
-  integrity sha512-5M3G/A4uBSMIlfJ+h9W125vJvPFH/zirISsW5qfxF5YzEvXJCtolLoQvM5yZft0DvMcUrPGKPOlgEu55I6iUtA==
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.1.0.tgz#b0a3be31752c97a0f7013c5f4903b71a05db6818"
+  integrity sha512-MW/FjM+IvU9CgBzjO3UIPCE2pyEwUsoFl+VGdczOPEdxfGFjuKny/gN54mOuX7Qxmb9Rg9MCn2oKiSUeW+pjrw==
 
 ajv@^6.5.3, ajv@^6.6.1:
   version "6.8.1"
@@ -512,10 +512,10 @@ irc-colors@1.5.0:
   resolved "https://registry.yarnpkg.com/irc-colors/-/irc-colors-1.5.0.tgz#08834c01ead88b0fd88386a5f2af8f2b0bb963fb"
   integrity sha512-HtszKchBQTcqw1DC09uD7i7vvMayHGM1OCo6AHt5pkgZEyo99ClhHTMJdf+Ezc9ovuNNxcH89QfyclGthjZJOw==
 
-irc-framework@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.1.0.tgz#5db583f0184f30a0694dd7b0b2dd91d537fa99f2"
-  integrity sha512-2drepITXMzNWS8QZelM6lu7bAz9Xz4t/d+N9Xi7qFjXiURfAETn+CSdLBq4dFyzrQMdMTAKnu9fCT/nsAGqBVQ==
+irc-framework@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.2.0.tgz#74d3ea9a93a90f74ef3e3da23cc2ca2834f3e96f"
+  integrity sha512-BjCae59zAvMNKL55nn+VaolOBdouAPSDP9ZYlEI9QCqejbaGMQxQiFrDdbEy1KnfdwnAL9+R2xhycuqKALyBgA==
   dependencies:
     eventemitter3 "^2.0.2"
     iconv-lite "^0.4.11"
