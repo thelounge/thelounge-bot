@@ -58,3 +58,7 @@ bot.on("join", function(event) {
 bot.on("part", function(event) {
 	util.log(event.channel + ": " + event.nick + " left");
 });
+
+bot.on("error", function(event) {
+	util.log(`IRC error: ${event.error} (${event.reason})`);
+});
