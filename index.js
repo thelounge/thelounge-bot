@@ -20,9 +20,8 @@ bot.connect({
 
 bot.on("registered", function() {
 	util.log("Connected!");
-	config.channels.forEach(function(e) {
-		bot.join(e);
-	});
+
+	bot.join(config.channels.join(","));
 });
 
 bot.on("close", function() {
