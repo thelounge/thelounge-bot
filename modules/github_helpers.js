@@ -83,7 +83,7 @@ function capitalizeFirstLetter(string) {
 
 function formatIssue(res) {
 	const prefix = res.pull_request === undefined ? "issue" : "pull request";
-	const color = res.state === "closed" ? "red" : "green";
+	const color = res.state === "closed" ? "red" : "lime";
 
 	res.state = capitalizeFirstLetter(res.state);
 
