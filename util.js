@@ -9,7 +9,7 @@ const prettyDate = function(date) {
 };
 
 const log = function(text) {
-	const message = prettyDate(new Date(Date.now())) + ": " + text + "\n";
+	const message = prettyDate(new Date(Date.now())) + ": " + text;
 
 	console.log(message); // eslint-disable-line no-console
 
