@@ -1,15 +1,12 @@
 "use strict";
 const fs = require("fs");
 
-const prettyDate = function(date) {
-	const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-	return months[date.getUTCMonth()] + " " + date.getUTCDate() + ", " + date.getUTCFullYear();
-};
+function timestamp() {
+	return (new Date()).toISOString().split(".")[0].replace("T", " ");
+}
 
 const log = function(text) {
-	const message = prettyDate(new Date(Date.now())) + ": " + text;
+	const message = timestamp() + ": " + text;
 
 	console.log(message); // eslint-disable-line no-console
 
@@ -34,6 +31,5 @@ const ip2Hex = function(address) {
 
 module.exports = {
 	log,
-	prettyDate,
 	ip2Hex,
 };
