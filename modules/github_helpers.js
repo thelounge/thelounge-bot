@@ -1,13 +1,11 @@
 "use strict";
-const {format} = require("util");
 const fetch = require("node-fetch");
 const config = require("../config");
 const c = require("irc-colors");
 const relativeDate = require("tiny-relative-date");
 
-function getIssueInformation(options) {
-	const {repo = config.githubRepo, user = config.githubUser, issue} = options;
-	const url = format("https://api.github.com/repos/%s/%s/issues/%s", user, repo, issue);
+function getIssueInformation({user, repo, issue}) {
+	const url = `https://api.github.com/repos/${user}/${repo}/issues/${issue}`;
 
 	return fetch(url)
 		.then((res) => res.json())
@@ -43,9 +41,8 @@ function getIssueInformation(options) {
 		});
 }
 
-function getCommitInformation(options) {
-	const {repo = config.githubRepo, user = config.githubUser, commit} = options;
-	const url = format("https://api.github.com/repos/%s/%s/commits/%s", user, repo, commit);
+function getCommitInformation({user, repo, commit}) {
+	const url = `https://api.github.com/repos/${user}/${repo}/commits/${commit}`;
 
 	return fetch(url)
 		.then((res) => res.json())
@@ -62,8 +59,7 @@ function getCommitInformation(options) {
 		});
 }
 
-function searchGithub(options) {
-	const {repo = config.githubRepo, user = config.githubUser, terms} = options;
+function searchGithub({user, repo, terms}) {
 	const url = `https://api.github.com/search/issues?q=repo:${user}/${repo}+${terms.join("+")}`;
 
 	return fetch(url)
