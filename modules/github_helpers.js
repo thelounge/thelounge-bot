@@ -3,6 +3,7 @@ const {format} = require("util");
 const fetch = require("node-fetch");
 const config = require("../config");
 const c = require("irc-colors");
+const relativeDate = require("tiny-relative-date");
 
 function getIssueInformation(options) {
 	const {repo = config.githubRepo, user = config.githubUser, issue} = options;
@@ -60,8 +61,9 @@ function getCommitInformation(options) {
 
 			// Take the first line of the commit message and limit its length
 			const message = res.commit.message.split("\n")[0].substring(0, 100).trim();
+			const date = relativeDate(res.commit.author.date);
 
-			return `Commit by ${c.pink(res.commit.author.name)} on ${c.pink(res.commit.author.date)} - ${message} ${res.html_url}`;
+			return `Commit by ${c.pink(res.commit.author.name)} on ${c.pink(date)} - ${message} ${res.html_url}`;
 		});
 }
 
