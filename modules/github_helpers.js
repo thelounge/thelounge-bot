@@ -39,12 +39,7 @@ function getIssueInformation(options) {
 				return "";
 			}
 
-			const prefix = res.pull_request === undefined ? "issue" : "pull request";
-			const color = res.state === "closed" ? "red" : "green";
-
-			res.state = capitalizeFirstLetter(res.state);
-
-			return `${c.olive("»")} ${c[color](`${res.state} ${prefix}`)} ${c.bold.blue(`#${res.number}`)} - ${res.title} ${res.html_url}`;
+			return c.olive("»") + " " + formatIssue(res);
 		});
 }
 
@@ -78,31 +73,21 @@ function searchGithub(options) {
 				return "Nothing was found.";
 			}
 
-			let status = res.items[0].state;
-
-			if (status === "closed") {
-				status = c.red(status);
-			} else {
-				status = c.green(status);
-			}
-
-			const title = res.items[0].title;
-			const link = res.items[0].html_url;
-			const issueNumber = res.items[0].number;
-			let type = "";
-
-			if (link.indexOf("issues") > -1) {
-				type = "Issue";
-			} else {
-				type = "PR";
-			}
-
-			return format("[%s %s] (%s) %s (%s)", c.bold.pink(type), c.bold.pink(issueNumber), status, title, link);
+			return formatIssue(res.items[0]);
 		});
 }
 
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function formatIssue(res) {
+	const prefix = res.pull_request === undefined ? "issue" : "pull request";
+	const color = res.state === "closed" ? "red" : "green";
+
+	res.state = capitalizeFirstLetter(res.state);
+
+	return `${c[color](`${res.state} ${prefix}`)} ${c.bold.blue(`#${res.number}`)} - ${res.title} ${res.html_url}`;
 }
 
 module.exports = {
