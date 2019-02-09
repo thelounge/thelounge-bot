@@ -60,7 +60,7 @@ function handleIssueNumber(bot, options, action) {
 	const issues = action.message.match(issueNumbersRegex);
 
 	if (issues) {
-		issues.forEach((issue) => {
+		issues.slice(0, 3).forEach((issue) => {
 			const issueNumber = issue.substr(1);
 
 			helper.getIssueInformation({
