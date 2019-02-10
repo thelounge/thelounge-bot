@@ -1,6 +1,5 @@
 "use strict";
 const fetch = require("node-fetch");
-const config = require("../config");
 const c = require("irc-colors");
 const relativeDate = require("tiny-relative-date");
 
@@ -10,7 +9,7 @@ function getIssueInformation({user, repo, issue}) {
 	return fetch(url)
 		.then((res) => res.json())
 		.then((res) => {
-			if (res.message === "Not Found") {
+			if (!res.title) {
 				return {};
 			}
 
@@ -47,7 +46,7 @@ function getCommitInformation({user, repo, commit}) {
 	return fetch(url)
 		.then((res) => res.json())
 		.then((res) => {
-			if (res.message === "Not Found") {
+			if (!res.commit) {
 				return "Commit not found.";
 			}
 
@@ -55,7 +54,7 @@ function getCommitInformation({user, repo, commit}) {
 			const message = res.commit.message.split("\n")[0].substring(0, 100).trim();
 			const date = relativeDate(res.commit.author.date);
 
-			return `Commit by ${c.pink(res.commit.author.name)} on ${c.pink(date)} - ${message} ${res.html_url}`;
+			return `Committed ${c.pink(date)} - ${message} ${res.html_url}`;
 		});
 }
 
