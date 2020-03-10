@@ -1,6 +1,7 @@
 "use strict";
 
 const helper = require("./github_helpers");
+const util = require("../util");
 const issueNumbersRegex = /\B#([0-9]+)\b/g;
 
 const commands = function(bot, options, action) {
@@ -18,12 +19,14 @@ const commands = function(bot, options, action) {
 		const cmd = message.shift();
 
 		if (cmd === "!github" || cmd === "!gh") {
+			util.log(`[!gh command] ${action.target}: <${action.nick}> ${action.message}`);
 			handleSearchCommand(bot, options, action, message);
 		}
 	}
 
 	// if the message contains # and isn't an ignored user
-	if (action.message.indexOf("#") > -1 && options.ignore.indexOf(action.nick) === -1) {
+	if (action.message.includes("#") && !options.ignore.includes(action.nick)) {
+		util.log(`[issue number] ${action.target}: <${action.nick}> ${action.message}`);
 		handleIssueNumber(bot, options, action);
 	}
 };

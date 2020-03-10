@@ -12,7 +12,7 @@ const config = {
 	ignore: ["Wendy"],
 	githubUser: "thelounge",
 	githubRepo: "thelounge",
-	owners: ["xPaw", "astorije", "YaManicKill", "MaxLeiter"],
+	owners: ["xPaw", "astorije", "McInkay", "MaxLeiter", "richrd"],
 };
 
 module.exports = config;

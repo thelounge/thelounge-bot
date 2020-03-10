@@ -1,6 +1,7 @@
 "use strict";
 
 const {spawn} = require("child_process");
+const util = require("../util");
 
 const commands = function(bot, options, action) {
 	if (!options.owners.includes(action.nick)) {
@@ -10,6 +11,8 @@ const commands = function(bot, options, action) {
 	if (!action.message.startsWith(options.botName)) {
 		return;
 	}
+
+	util.log(`[admin cmd] ${action.target}: <${action.nick}> ${action.message}`);
 
 	const command = action.message.split(" ");
 	command.shift();

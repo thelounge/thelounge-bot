@@ -33,30 +33,24 @@ bot.on("message", function(event) {
 		return;
 	}
 
-	util.log(event.target + ": " + "<" + event.nick + ">" + ": " + event.message);
-
 	admin.commands(bot, config, event);
 	github.commands(bot, config, event);
 });
 
 bot.on("join", function(event) {
-	util.log(`${event.nick} joined ${event.channel}`);
-
 	if (event.nick === bot.user.nick) {
 		return;
 	}
 
 	if (event.nick.startsWith("lounge-user") || event.nick.startsWith("thelounge")) {
+		util.log(`${event.nick} joined ${event.channel}, sending welcome message`);
 		bot.say(event.nick, `👋 Hey \x02${event.nick}\x0F, now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the \x11/nick <new_nickname>\x0F command so we know who you are! 🙂`);
 	}
 
 	if (event.channel === "#shout-irc") {
+		util.log(`${event.nick} joined ${event.channel}, sending message about shout`);
 		bot.say(event.nick, `👋 Hey \x02${event.nick}\x0F, just a heads up that shout is now inactive, and The Lounge has taken its place. Come join us in #thelounge or check https://thelounge.chat for more info.`);
 	}
-});
-
-bot.on("part", function(event) {
-	util.log(event.channel + ": " + event.nick + " left");
 });
 
 bot.on("error", function(event) {
