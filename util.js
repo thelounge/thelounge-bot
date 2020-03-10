@@ -1,5 +1,4 @@
 "use strict";
-const fs = require("fs");
 
 function timestamp() {
 	return (new Date()).toISOString().split(".")[0].replace("T", " ");
@@ -9,12 +8,6 @@ const log = function(text) {
 	const message = timestamp() + ": " + text;
 
 	console.log(message); // eslint-disable-line no-console
-
-	fs.appendFile("log.txt", message, function(err) {
-		if (err) {
-			return console.log(err); // eslint-disable-line no-console
-		}
-	});
 };
 
 const ip2Hex = function(address) {
