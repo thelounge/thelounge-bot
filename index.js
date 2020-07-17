@@ -24,6 +24,10 @@ bot.on("registered", function() {
 	bot.join(config.channels.join(","));
 });
 
+bot.on("socket close", (error) => util.log(`Socket close: ${error}`));
+bot.on("socket error", (error) => util.log(`Socket error: ${error}`));
+bot.on("irc error", (data) => util.log(data));
+
 bot.on("close", function() {
 	util.log("Connection close");
 });
