@@ -4,6 +4,7 @@ const IRC = require("irc-framework");
 const config = require("./config.js");
 const github = require("./modules/github");
 const admin = require("./modules/admin");
+const faq = require("./modules/faq");
 const util = require("./util");
 const ip = require("ip");
 const bot = new IRC.Client();
@@ -22,6 +23,8 @@ bot.on("registered", function() {
 	util.log("Connected!");
 
 	bot.join(config.channels.join(","));
+
+	faq.init();
 });
 
 bot.on("socket close", (error) => util.log(`Socket close: ${error}`));
@@ -39,6 +42,7 @@ bot.on("message", function(event) {
 
 	admin.commands(bot, config, event);
 	github.commands(bot, config, event);
+	faq.commands(bot, config, event);
 });
 
 bot.on("join", function(event) {
