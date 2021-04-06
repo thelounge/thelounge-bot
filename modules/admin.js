@@ -3,7 +3,7 @@
 const {spawn} = require("child_process");
 const util = require("../util");
 
-const commands = function(bot, options, action) {
+const commands = function (bot, options, action) {
 	if (!options.owners.includes(action.nick)) {
 		return;
 	}

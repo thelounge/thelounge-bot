@@ -19,7 +19,7 @@ bot.connect({
 	password: config.password,
 });
 
-bot.on("registered", function() {
+bot.on("registered", function () {
 	util.log("Connected!");
 
 	bot.join(config.channels.join(","));
@@ -31,11 +31,11 @@ bot.on("socket close", (error) => util.log(`Socket close: ${error}`));
 bot.on("socket error", (error) => util.log(`Socket error: ${error}`));
 bot.on("irc error", (data) => util.log(data));
 
-bot.on("close", function() {
+bot.on("close", function () {
 	util.log("Connection close");
 });
 
-bot.on("message", function(event) {
+bot.on("message", function (event) {
 	if (event.from_server) {
 		return;
 	}
@@ -45,22 +45,28 @@ bot.on("message", function(event) {
 	faq.commands(bot, config, event);
 });
 
-bot.on("join", function(event) {
+bot.on("join", function (event) {
 	if (event.nick === bot.user.nick) {
 		return;
 	}
 
 	if (event.nick.startsWith("lounge-user") || event.nick.startsWith("thelounge")) {
 		util.log(`${event.nick} joined ${event.channel}, sending welcome message`);
-		bot.say(event.nick, `👋 Hey \x02${event.nick}\x0F, now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the \x11/nick <new_nickname>\x0F command so we know who you are! 🙂`);
+		bot.say(
+			event.nick,
+			`👋 Hey \x02${event.nick}\x0F, now that you've figured out how to use The Lounge, feel free to change your nickname to something more personal using the \x11/nick <new_nickname>\x0F command so we know who you are! 🙂`
+		);
 	}
 
 	if (event.channel === "#shout-irc") {
 		util.log(`${event.nick} joined ${event.channel}, sending message about shout`);
-		bot.say(event.nick, `👋 Hey \x02${event.nick}\x0F, just a heads up that shout is now inactive, and The Lounge has taken its place. Come join us in #thelounge or check https://thelounge.chat for more info.`);
+		bot.say(
+			event.nick,
+			`👋 Hey \x02${event.nick}\x0F, just a heads up that shout is now inactive, and The Lounge has taken its place. Come join us in #thelounge or check https://thelounge.chat for more info.`
+		);
 	}
 });
 
-bot.on("error", function(event) {
+bot.on("error", function (event) {
 	util.log(`IRC error: ${event.error} (${event.reason})`);
 });

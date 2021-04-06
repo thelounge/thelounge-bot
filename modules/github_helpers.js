@@ -63,7 +63,7 @@ function searchGithub({user, repo, terms}) {
 
 	return fetch(url)
 		.then((res) => res.json())
-		.then(function(res) {
+		.then(function (res) {
 			if (!res.items || res.items.length === 0) {
 				return "Nothing was found.";
 			}
@@ -82,7 +82,9 @@ function formatIssue(res) {
 
 	res.state = capitalizeFirstLetter(res.state);
 
-	return `${c[color](`${res.state} ${prefix}`)} ${c.bold.blue(`#${res.number}`)} - ${res.title} ${res.html_url}`;
+	return `${c[color](`${res.state} ${prefix}`)} ${c.bold.blue(`#${res.number}`)} - ${res.title} ${
+		res.html_url
+	}`;
 }
 
 module.exports = {
