@@ -5,11 +5,11 @@ const helper = require("./faq_helpers");
 
 let faq = null;
 
-const init = function() {
+const init = function () {
 	faq = helper.getFAQ();
 };
 
-const commands = function(bot, options, action) {
+const commands = function (bot, options, action) {
 	if (action.message.length < 2) {
 		return;
 	}
@@ -83,7 +83,9 @@ function handleAddFAQ(message, reply) {
 	const shortcut = message.shift();
 
 	if (getFAQEntry(shortcut) !== undefined) {
-		return reply(`${shortcut} already exists. Use !faq edit <shortcut> to modify, or !faq remove <shortcut> to delete.`);
+		return reply(
+			`${shortcut} already exists. Use !faq edit <shortcut> to modify, or !faq remove <shortcut> to delete.`
+		);
 	}
 
 	setFAQEntry(shortcut, message);

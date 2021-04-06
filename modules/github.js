@@ -4,7 +4,7 @@ const helper = require("./github_helpers");
 const util = require("../util");
 const issueNumbersRegex = /\B#([0-9]+)\b/g;
 
-const commands = function(bot, options, action) {
+const commands = function (bot, options, action) {
 	if (action.message.length < 2) {
 		return;
 	}
@@ -45,18 +45,22 @@ function handleSearchCommand(bot, options, action, message) {
 			return reply("Search query cannot be empty.");
 		}
 
-		return helper.searchGithub({
-			repo: options.githubRepo,
-			user: options.githubUser,
-			terms: message,
-		}).then(reply);
+		return helper
+			.searchGithub({
+				repo: options.githubRepo,
+				user: options.githubUser,
+				terms: message,
+			})
+			.then(reply);
 	}
 
-	helper.getCommitInformation({
-		user: options.githubUser,
-		repo: options.githubRepo,
-		commit: cmd,
-	}).then(reply);
+	helper
+		.getCommitInformation({
+			user: options.githubUser,
+			repo: options.githubRepo,
+			commit: cmd,
+		})
+		.then(reply);
 }
 
 function handleIssueNumber(bot, options, action) {
@@ -66,15 +70,17 @@ function handleIssueNumber(bot, options, action) {
 		issues.slice(0, 3).forEach((issue) => {
 			const issueNumber = issue.substr(1);
 
-			helper.getIssueInformation({
-				user: options.githubUser,
-				repo: options.githubRepo,
-				issue: issueNumber,
-			}).then((message) => {
-				if (message) {
-					bot.say(action.target, message);
-				}
-			});
+			helper
+				.getIssueInformation({
+					user: options.githubUser,
+					repo: options.githubRepo,
+					issue: issueNumber,
+				})
+				.then((message) => {
+					if (message) {
+						bot.say(action.target, message);
+					}
+				});
 		});
 	}
 }
