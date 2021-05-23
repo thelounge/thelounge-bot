@@ -2,7 +2,7 @@
 
 const config = {
 	channels: ["#thelounge-test"],
-	server: "chat.freenode.net",
+	server: "irc.libera.chat",
 	server_port: 6697,
 	server_tls: true,
 	botName: "lounge-botter",

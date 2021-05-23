@@ -1,6 +1,6 @@
 # lounge-bot
 
-A node-js IRC bot for [The Lounge's](https://www.github.com/TheLounge) IRC channel on freenode.
+A node-js IRC bot for [The Lounge's](https://www.github.com/TheLounge) IRC channel on Libera.Chat.
 
 ### Setup and running
 
@@ -17,7 +17,7 @@ Configuration information can be found in the config.json. The default options a
 ```js
 var config = {
   channels: ["#thelounge-test"],
-  server: "chat.freenode.net",
+  server: "irc.libera.chat",
   botName: "lounge-botter",
   realName: "TheLounge IRC Bot",
   commandPrefix: "!",
